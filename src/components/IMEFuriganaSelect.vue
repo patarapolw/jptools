@@ -1,22 +1,17 @@
 <script lang="ts" setup>
-export type MakeRubyFunc = (base: string, furi: string) => string
-
-export type FuriganaOption = {
-  name: string
-  fn?: MakeRubyFunc
-}
+import { FuriganaMode } from '@/shared/furigana'
 
 defineProps<{
   values: {
     [category: string]: {
-      [key: string]: FuriganaOption
+      [key: string]: FuriganaMode
     }
   }
   select: string
 }>()
 
 const emit = defineEmits<{
-  (e: 'change', value: FuriganaOption): void
+  (e: 'change', value: FuriganaMode): void
 }>()
 
 const name = 'RadioSelect-' + Math.random().toString(36).substring(2)
@@ -37,13 +32,16 @@ const name = 'RadioSelect-' + Math.random().toString(36).substring(2)
           :name="k"
           :title="v.name"
           :fn="v"
-          :sample="v.fn?.('漢字', 'ふり')"
+          :sample="v.fn?.('漢字', 'ふり') || v.sample"
           lang="ja"
         >
           <span>{{ v.name }}</span>
-          <span v-if="v.fn">{{' ('}}</span>
-          <span v-if="v.fn" lang="ja"> {{ v.fn('漢字', 'ふり') }} </span>
-          <span v-if="v.fn">{{')'}}</span>
+          <span v-if="v.fn || v.sample">
+            <span>{{' ('}}</span>
+            <span v-if="v.fn" lang="ja"> {{ v.fn('漢字', 'ふり') }} </span>
+            <span> {{ v.sample }} </span>
+            <span>{{')'}}</span>
+          </span>
         </slot>
       </label>
     </div>

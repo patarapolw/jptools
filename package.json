@@ -3,15 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "GH=1 vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "vue-tsc --noEmit && GH=1 vite build && gh-pages -d dist"
   },
   "dependencies": {
     "vue": "^3.2.25",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.14",
+    "wanakana": "^4.0.2"
   },
   "devDependencies": {
+    "@types/wanakana": "^4.0.3",
     "@vitejs/plugin-vue": "^2.3.0",
     "gh-pages": "^3.2.3",
     "prettier": "^2.6.2",

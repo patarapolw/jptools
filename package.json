@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "GH=1 vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "lint": "vue-tsc --noEmit",
+    "build": "vite build",
     "preview": "vite preview",
-    "deploy": "vue-tsc --noEmit && GH=1 vite build && gh-pages -d dist"
+    "deploy": "GH=1 vite build && gh-pages -d dist"
   },
   "dependencies": {
     "vue": "^3.2.25",

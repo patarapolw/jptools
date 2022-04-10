@@ -5,6 +5,7 @@ module.exports = {
     {
       format(document, range, options) {
         const lang = document.languageId
+        if (!PRETTIER_LANG.includes(lang)) return
 
         let parser = lang
         switch (parser) {
@@ -12,21 +13,14 @@ module.exports = {
             parser = 'typescript'
         }
 
-        if (!PRETTIER_LANG.includes(lang)) return
-        let formattedText = require('prettier')
-          .format(document.getText(), {
-            ...require('./.prettierrc.json'),
-            parser
-          })
-          .replace(/^;/, '')
-        if (document.languageId !== 'html') {
+        let formattedText = require('prettier').format(document.getText(), {
+          ...require('./.prettierrc.json'),
+          parser
+        })
+
+        if (lang !== 'html') {
           formattedText = `\n${formattedText}`
         }
-        require('fs').writeFileSync(
-          `tmp/${new Date().toISOString()}.json`,
-          JSON.stringify({ document, formattedText, lang })
-        )
-        // }
 
         if (formattedText === document.getText()) return []
 

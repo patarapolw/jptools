@@ -1,17 +1,22 @@
 <script lang="ts" setup>
 export type MakeRubyFunc = (base: string, furi: string) => string
 
-const props = defineProps<{
+export type FuriganaOption = {
+  name: string
+  fn?: MakeRubyFunc
+}
+
+defineProps<{
   values: {
     [category: string]: {
-      [key: string]: MakeRubyFunc | null
+      [key: string]: FuriganaOption
     }
   }
   select: string
 }>()
 
 const emit = defineEmits<{
-  (e: 'change', value: MakeRubyFunc | null): void
+  (e: 'change', value: FuriganaOption): void
 }>()
 
 const name = 'RadioSelect-' + Math.random().toString(36).substring(2)
@@ -24,13 +29,21 @@ const name = 'RadioSelect-' + Math.random().toString(36).substring(2)
       <input
         type="radio"
         :name="name"
-        :checked="select === k"
+        :checked="select === v.name"
         @change="emit('change', v)"
       />
       <label>
-        <slot :name="k" :fn="v" :sample="v?.('漢字', 'ふり')" lang="ja">
-          <span v-if="v"> {{ v('漢字', 'ふり') }} </span>
-          <span v-else> {{ k }} </span>
+        <slot
+          :name="k"
+          :title="v.name"
+          :fn="v"
+          :sample="v.fn?.('漢字', 'ふり')"
+          lang="ja"
+        >
+          <span>{{ v.name }}</span>
+          <span v-if="v.fn">{{' ('}}</span>
+          <span v-if="v.fn" lang="ja"> {{ v.fn('漢字', 'ふり') }} </span>
+          <span v-if="v.fn">{{')'}}</span>
         </slot>
       </label>
     </div>

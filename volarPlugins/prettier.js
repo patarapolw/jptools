@@ -18,7 +18,8 @@ module.exports = function volarPrettierPlugin(languages, prettierrc) {
       // I don't if what is return matters or not. It is `NullableResult<TextEdit[]>` after all.
       if (!languages.includes(document.languageId)) return []
 
-      let formattedText = prettier.format(document.getText(), {
+      const originalText = document.getText()
+      let formattedText = prettier.format(originalText, {
         ...prettierConfig,
         tabWidth: options.tabSize,
         useTabs: !options.insertSpaces,
@@ -29,13 +30,13 @@ module.exports = function volarPrettierPlugin(languages, prettierrc) {
         formattedText = '\n' + formattedText
       }
 
-      if (formattedText === document.getText()) return []
+      if (formattedText === originalText) return []
 
       return [
         {
           range: {
             start: document.positionAt(0),
-            end: document.positionAt(document.getText().length)
+            end: document.positionAt(originalText.length)
           },
           newText: formattedText
         }

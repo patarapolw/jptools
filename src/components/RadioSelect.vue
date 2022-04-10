@@ -1,19 +1,27 @@
 <script lang="ts" setup>
-defineProps<{
-  values: string[]
+const props = defineProps<{
+  values: Record<string, string>
+  select: string
 }>()
 
 const emit = defineEmits<{
-  (e: 'change', value: string): void
+  (e: 'change', value: keyof typeof props.values): void
 }>()
+
+const name = 'RadioSelect-' + Math.random().toString(36).substring(2)
 </script>
 
 <template>
   <nav>
-    <div class="field" v-for="v in values" :key="v">
-      <input type="radio" @select="emit('change', v)" />
+    <div class="field" v-for="[k, v] in Object.entries(values)" :key="k">
+      <input
+        type="radio"
+        :name="name"
+        :checked="select === k"
+        @select="emit('change', k)"
+      />
       <label>
-        <slot :name="v">{{ v }}</slot>
+        <slot :name="k">{{ v }}</slot>
       </label>
     </div>
   </nav>

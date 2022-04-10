@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "GH=1 vite",
+    "dev": "vite",
     "lint": "vue-tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "GH=1 vite build && gh-pages -d dist"
+    "gh-pages": "GH=1 vite build && gh-pages -d dist"
   },
   "dependencies": {
     "vue": "^3.2.25",

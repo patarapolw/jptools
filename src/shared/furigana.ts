@@ -1,3 +1,5 @@
+import { ref, watch } from 'vue'
+
 export type MakeRubyFunc = (base: string, furi: string) => string
 
 export interface FuriganaMode {
@@ -61,8 +63,20 @@ export const furiganaModes: {
   }
 }
 
+const MODE_KEY = 'FURIGANA_MODE'
+const modeName = localStorage.getItem(MODE_KEY) || 'tab'
+
+export const mode = ref<FuriganaMode>(furiganaModes['Plain Text'].tab)
+
 Object.values(furiganaModes).map((o) =>
   Object.entries(o).map(([key, v]) => {
     v.key = key
+    if (key === modeName) {
+      mode.value = v
+    }
   })
 )
+
+watch(mode, () => {
+  localStorage.setItem(MODE_KEY, mode.value.key)
+})

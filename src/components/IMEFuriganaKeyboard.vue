@@ -3,10 +3,9 @@ import { ref } from 'vue'
 
 import { toHiragana, toKatakana, isKana } from 'wanakana'
 
-import { FuriganaMode } from '@/shared/furigana'
+import { mode } from '@/shared/furigana'
 
-const props = defineProps<{
-  mode: FuriganaMode
+defineProps<{
   height?: string
 }>()
 
@@ -38,7 +37,7 @@ function addFurigana(ev: Event) {
 
     let markup = data
 
-    const rubyFunc = props.mode.fn
+    const rubyFunc = mode.value.fn
     if (rubyFunc) {
       let parts = data.split(/([\p{N}\p{sc=Han}]+)/gu)
       if (parts.length === 1) return
@@ -74,7 +73,7 @@ function addFurigana(ev: Event) {
     } else {
       markup = `${data}\t${furi}`
 
-      switch (props.mode.key) {
+      switch (mode.value.key) {
         case 'space':
           markup = `${data} ${furi}`
       }

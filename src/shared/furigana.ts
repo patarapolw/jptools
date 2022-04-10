@@ -28,7 +28,7 @@ export const furiganaModes: {
     anki: {
       key: '',
       name: 'Anki Japanese Support',
-      fn: (base, ruby) => ` ${base}[{${ruby}]`
+      fn: (base, ruby) => ` ${base}[${ruby}]`
     },
     furiganaMarkdownIt: {
       key: '',

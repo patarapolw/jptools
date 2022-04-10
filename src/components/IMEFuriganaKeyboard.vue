@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
+import { toHiragana, toKatakana, isKana } from 'wanakana'
+
 import { FuriganaMode } from '@/shared/furigana'
 
 const props = defineProps<{
@@ -34,17 +36,27 @@ function addFurigana(ev: Event) {
     furi = furi.replace(/[ｎn]$/g, 'ん')
     // furi = furi.replace(/[ＮN]$/g, 'ン')
 
-    let markup = `${data}\t${furi}`
+    let markup = data
 
     const rubyFunc = props.mode.fn
     if (rubyFunc) {
-      let parts = data.split(/(\p{sc=Han}+)/gu)
+      let parts = data.split(/([\p{N}\p{sc=Han}]+)/gu)
       if (parts.length === 1) return
-      let hiraganaParts = parts.map((p) => Array.from(p).join(''))
-      let regex = new RegExp(
+      const regex = new RegExp(
         '^' +
-          hiraganaParts
-            .map((p, idx) => '(' + (idx & 1 ? '.+' : p) + ')')
+          parts
+            .map(
+              (p, idx) =>
+                '(' +
+                (idx & 1
+                  ? '.+'
+                  : Array.from(p)
+                      .map((c) =>
+                        isKana(c) ? `[${toKatakana(c)}${toHiragana(c)}]` : c
+                      )
+                      .join('')) +
+                ')'
+            )
             .join('') +
           '$'
       )
@@ -54,11 +66,14 @@ function addFurigana(ev: Event) {
         rt = ['', furi]
       }
       rt.shift()
+
       markup = [
-        markup,
+        data,
         parts.map((p, idx) => (idx & 1 ? rubyFunc(p, rt[idx]) : p)).join('')
       ].join(' ')
     } else {
+      markup = `${data}\t${furi}`
+
       switch (props.mode.key) {
         case 'space':
           markup = `${data} ${furi}`

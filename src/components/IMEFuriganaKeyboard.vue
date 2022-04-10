@@ -3,9 +3,10 @@ import { ref } from 'vue'
 
 import { toHiragana, toKatakana, isKana } from 'wanakana'
 
-import { mode } from '@/shared/furigana'
+import { FuriganaMode, mode as defaultMode } from '@/shared/furigana'
 
-defineProps<{
+const props = defineProps<{
+  mode?: FuriganaMode
   height?: string
 }>()
 
@@ -28,55 +29,56 @@ function addFurigana(ev: Event) {
     data.trim() &&
     target instanceof HTMLTextAreaElement
   ) {
-    let furi = furigana.value
-    if (!furi) return
+    let output = furigana.value
+    if (!output) return
 
     // Although replacement does work, it's not a good idea to replace after all.
-    furi = furi.replace(/[ｎn]$/g, 'ん')
-    // furi = furi.replace(/[ＮN]$/g, 'ン')
+    output = output.replace(/[ｎn]$/g, 'ん')
+    // output = output.replace(/[ＮN]$/g, 'ン')
 
-    let markup = data
+    const mode = props.mode || defaultMode.value
 
-    const rubyFunc = mode.value.fn
+    const rubyFunc = mode.fn
     if (rubyFunc) {
-      let parts = data.split(/([\p{N}\p{sc=Han}]+)/gu)
-      if (parts.length === 1) return
-      const regex = new RegExp(
-        '^' +
-          parts
-            .map(
-              (p, idx) =>
-                '(' +
-                (idx & 1
-                  ? '.+'
-                  : Array.from(p)
-                      .map((c) =>
-                        isKana(c) ? `[${toKatakana(c)}${toHiragana(c)}]` : c
-                      )
-                      .join('')) +
-                ')'
-            )
-            .join('') +
-          '$'
-      )
-      let rt = furi.match(regex) || []
-      if (!rt.length) {
-        parts = [data]
-        rt = ['', furi]
-      }
-      rt.shift()
+      output =
+        (() => {
+          let parts = data.split(/([\p{N}\p{sc=Han}]+)/gu)
+          if (parts.length === 1) return
+          const regex = new RegExp(
+            '^' +
+              parts
+                .map(
+                  (p, idx) =>
+                    '(' +
+                    (idx & 1
+                      ? '.+'
+                      : Array.from(p)
+                          .map((c) =>
+                            isKana(c) ? `[${toKatakana(c)}${toHiragana(c)}]` : c
+                          )
+                          .join('')) +
+                    ')'
+                )
+                .join('') +
+              '$'
+          )
+          let rt = output.match(regex) || []
+          if (!rt.length) {
+            parts = [data]
+            rt = ['', output]
+          }
+          rt.shift()
 
-      markup = [
-        data,
-        parts.map((p, idx) => (idx & 1 ? rubyFunc(p, rt[idx]) : p)).join('')
-      ].join(' ')
-    } else {
-      markup = `${data}\t${furi}`
+          return parts
+            .map((p, idx) => (idx & 1 ? rubyFunc(p, rt[idx]) : p))
+            .join('')
+        })() || output
+    }
 
-      switch (mode.value.key) {
-        case 'space':
-          markup = `${data} ${furi}`
-      }
+    let markup = `${data}\t${output}`
+    switch (mode.key) {
+      case 'space':
+        markup = `${data} ${output}`
     }
 
     target.setRangeText(

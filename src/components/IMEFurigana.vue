@@ -2,22 +2,76 @@
 import { ref } from 'vue'
 import RadioSelect from './RadioSelect.vue'
 
-const furiTypes = {
-  tab: 'Tab-separated',
-  space: 'Space-separated',
-  furiganaMarkdownIt: 'furigana-markdown-it',
-  IME2Furigana: 'IME2Furigana',
-  IME2FuriganaSpoiler: 'IME2Furigana spoiler'
+type MakeRubyFunc = (base: string, furi: string) => string
+
+const furiFuncs: Record<string, MakeRubyFunc | null> = {
+  tab: null,
+  space: null,
+  furiganaMarkdownIt: (base, ruby) => `[${base}]{${ruby}}`,
+  IME2Furigana: (base, ruby) => `<${base}>[${ruby}]`,
+  IME2FuriganaSpoiler: (base, ruby) => `<${base}>{${ruby}}`
 }
 
-const furiType = ref<keyof typeof furiTypes>('tab')
+const furiType = ref<keyof typeof furiFuncs>('tab')
 const furigana = ref('')
+
+function onTextAreaUpdate({ data }: { data: string }) {
+  if (/^[\p{sc=Katakana}\p{sc=Hiragana}]+$/u.test(data)) {
+    furigana.value = data
+  }
+}
+
+function addFurigana({
+  data,
+  target
+}: {
+  data: string
+  target: HTMLTextAreaElement
+}) {
+  let furi = furigana.value.replace(/ｎ/g, 'ん')
+  let markup = `${data}\t${furi}`
+
+  const rubyFunc = furiFuncs[furiType.value]
+  if (rubyFunc) {
+    let parts = data.split(/(\p{sc=Han}+)/gu)
+    if (parts.length === 1) return
+    let hiraganaParts = parts.map((p) => Array.from(p).join(''))
+    let regex = new RegExp(
+      '^' +
+        hiraganaParts
+          .map((p, idx) => '(' + (idx & 1 ? '.+' : p) + ')')
+          .join('') +
+        '$'
+    )
+    let rt = furi.match(regex) || []
+    if (!rt.length) {
+      parts = [data]
+      rt = ['', furi]
+    }
+    rt.shift()
+    markup = parts
+      .map((p, idx) => (idx & 1 ? rubyFunc(p, rt[idx]) : p))
+      .join('')
+  } else {
+    switch (furiType.value) {
+      case 'space':
+        markup = `${data} ${furi}`
+    }
+  }
+
+  target.setRangeText(
+    markup,
+    target.selectionStart - data.length,
+    target.selectionStart,
+    'end'
+  )
+}
 </script>
 
 <template>
   <section>
     <RadioSelect
-      :values="furiTypes"
+      :values="furiFuncs"
       :select="furiType"
       @change="(k) => furiType = k"
     >
@@ -65,7 +119,12 @@ const furigana = ref('')
         )
       </template>
     </RadioSelect>
-    <textarea lang="ja"></textarea>
+    <textarea
+      lang="ja"
+      placeholder="Any Japanese typed with an IME here will retain its Furigana..."
+      @compositionupdate="onTextAreaUpdate"
+      @compositionend="(addFurigana as any)"
+    ></textarea>
   </section>
 </template>
 

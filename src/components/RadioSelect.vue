@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const props = defineProps<{
-  values: Record<string, string>
+  values: Record<string, any>
   select: string
 }>()
 
@@ -18,7 +18,7 @@ const name = 'RadioSelect-' + Math.random().toString(36).substring(2)
         type="radio"
         :name="name"
         :checked="select === k"
-        @select="emit('change', k)"
+        @change="emit('change', k)"
       />
       <label>
         <slot :name="k">{{ v }}</slot>

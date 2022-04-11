@@ -9,6 +9,13 @@ const { randomUUID } = require('crypto')
 module.exports = function volarPrettierPlugin(languages) {
   const prettierConfig = resolveConfig.sync(resolveConfigFile.sync())
 
+  const makeUUID = () => `{{'${randomUUID()}'}}`
+  const uuidRegex = (() => {
+    const c = '[0-9a-f]'
+    return new RegExp(makeUUID().replace(new RegExp(c, 'g'), c), 'g')
+  })()
+
+  /** @type {import('@volar/vue-language-service-types').EmbeddedLanguageServicePlugin} */
   return {
     format(document, range, options) {
       // I don't if what is return matters or not. It is `NullableResult<TextEdit[]>` after all.
@@ -25,12 +32,15 @@ module.exports = function volarPrettierPlugin(languages) {
       const noBreak = new Map()
       if (isHTML) {
         preFormattedText = preFormattedText
-          .replace(/ *{{ *(['"][^]+?\1) *}} */g, (p0, p1) => {
-            const id = `{{'${randomUUID()}'}}`
-            p0 = `{{ ${p1} }}`
-            noBreak.set(id, p0)
-            return id
-          })
+          .replace(
+            /( *){{ *((['"])[^]+?\3) *}}( *)/g,
+            (raw, w1, content, bracket, w2) => {
+              const id = makeUUID()
+              raw = `{{ ${content} }}`
+              noBreak.set(id, raw)
+              return w1 + id + w2
+            }
+          )
           // This one is opinionated, but I just put it here, anyway.
           .replace(/> ?({{.+?}})/g, '> $1')
           .replace(/({{.+?}}) ?</g, '$1 <')
@@ -44,8 +54,8 @@ module.exports = function volarPrettierPlugin(languages) {
       })
 
       if (isHTML) {
-        formattedText = formattedText.replace(/{{'.+?'}}/g, (p0) => {
-          return noBreak.get(p0) || p0
+        formattedText = formattedText.replace(uuidRegex, (raw) => {
+          return noBreak.get(raw) || raw
         })
       } else {
         formattedText = '\n' + formattedText

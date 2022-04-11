@@ -120,7 +120,6 @@ function addFurigana(ev: Event) {
 
 <style lang="scss" scoped>
 textarea {
-  width: 100%;
   border-radius: 6px;
   border: 1px solid lightgray;
   font-size: 18px;

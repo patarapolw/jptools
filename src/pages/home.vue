@@ -12,37 +12,47 @@ import H from '@/components/H.vue'
 
     <ul>
       <li>
-        <div class="description">
-          <router-link to="/furigana"> IME2Furigana keyboard </router-link>
-          <span> {{ ' (use this to paste into Excel or similar)' }} </span>
+        <div class="listing-item">
+          <div class="description">
+            <router-link to="/furigana"> IME2Furigana keyboard </router-link>
+            <span> {{ ' (use this to paste into Excel or similar)' }} </span>
+          </div>
+          <IMEFuriganaKeyboard
+            :mode="furiganaModes['Plain Text'].tab"
+            height="200px"
+          />
         </div>
-        <IMEFuriganaKeyboard
-          :mode="furiganaModes['Plain Text'].tab"
-          height="200px"
-        />
       </li>
       <li>
-        <div class="description">
-          <router-link to="/keyboard"> Kana keyboard </router-link>
-          <span> {{ ' (powered by ' }} </span>
-          <a
-            href="https://wanakana.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ 'wanakana.js' }}
-          </a>
-          <span> {{ ')' }} </span>
+        <div class="listing-item">
+          <div class="description">
+            <router-link to="/keyboard"> Kana keyboard </router-link>
+            <span> {{ ' (powered by ' }} </span>
+            <a
+              href="https://wanakana.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ 'wanakana.js' }}
+            </a>
+            <span> {{ ')' }} </span>
+          </div>
+          <KanaKeyboard height="200px" />
         </div>
-        <KanaKeyboard height="200px" />
       </li>
     </ul>
   </section>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .description {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+.listing-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 </style>

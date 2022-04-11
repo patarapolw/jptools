@@ -14,6 +14,6 @@ import H from '@/components/H.vue'
       </a>
     </p>
 
-    <KanaKeyboard />
+    <KanaKeyboard autofocus />
   </section>
 </template>

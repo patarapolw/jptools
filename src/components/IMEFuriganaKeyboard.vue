@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { toHiragana, toKatakana, isKana } from 'wanakana'
 
@@ -8,9 +8,21 @@ import { FuriganaMode, mode as defaultMode } from '@/shared/furigana'
 const props = defineProps<{
   mode?: FuriganaMode
   height?: string
+  autofocus?: boolean
 }>()
 
 const furigana = ref('')
+const elTextArea = ref<HTMLTextAreaElement>()
+
+onMounted(() => {
+  if (props.autofocus) {
+    elTextArea.value?.focus?.()
+  }
+})
+
+watch(defaultMode, () => {
+  elTextArea.value?.focus?.()
+})
 
 function onTextAreaUpdate({ data }: { data: string }) {
   if (/^[\p{sc=Katakana}\p{sc=Hiragana}]+$/u.test(data)) {
@@ -97,6 +109,7 @@ function addFurigana(ev: Event) {
 
 <template>
   <textarea
+    :ref="(el) => elTextArea = el"
     lang="ja"
     placeholder="Any Japanese typed with an IME here will retain its Furigana..."
     @compositionupdate="onTextAreaUpdate"

@@ -66,7 +66,7 @@ export const furiganaModes: {
 const MODE_KEY = 'FURIGANA_MODE'
 const modeName = localStorage.getItem(MODE_KEY) || 'tab'
 
-export const mode = ref<FuriganaMode>(furiganaModes['Plain Text'].tab)
+export const mode = ref<FuriganaMode>({} as FuriganaMode)
 
 Object.values(furiganaModes).map((o) =>
   Object.entries(o).map(([key, v]) => {
@@ -80,3 +80,7 @@ Object.values(furiganaModes).map((o) =>
 watch(mode, () => {
   localStorage.setItem(MODE_KEY, mode.value.key)
 })
+
+export function furiganaSample(m: FuriganaMode) {
+  return m.fn?.('漢字', 'ふり') || m.sample
+}

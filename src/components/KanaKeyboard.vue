@@ -1,13 +1,21 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { toKana } from 'wanakana'
 
-defineProps<{
+const props = defineProps<{
   height?: string
+  autofocus?: boolean
 }>()
 
 const currentText = ref('')
+const elTextArea = ref<HTMLTextAreaElement>()
+
+onMounted(() => {
+  if (props.autofocus) {
+    elTextArea.value?.focus?.()
+  }
+})
 
 function makeKanaFromInput(ev: Event) {
   const { target } = ev
@@ -25,6 +33,7 @@ function makeKanaFromInput(ev: Event) {
 
 <template>
   <textarea
+    :ref="(el) => elTextArea = el"
     lang="ja"
     placeholder="English alphabets will conveniently converted to Kana. (Hiragana for lowercase, Katakana for uppercase.)"
     :value="currentText"

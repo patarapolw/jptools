@@ -1,17 +1,13 @@
-const { readFileSync, existsSync } = require('fs')
-const prettier = require('prettier')
+const { format, resolveConfigFile, resolveConfig } = require('prettier')
+const { randomUUID } = require('crypto')
 
 /**
  *
  * @param {string[]} languages
- * @param {string} [prettierrc]
  * @returns {import('@volar/vue-language-service-types').EmbeddedLanguageServicePlugin}
  */
-module.exports = function volarPrettierPlugin(languages, prettierrc) {
-  const prettierConfig =
-    prettierrc && existsSync(prettierrc)
-      ? JSON.parse(readFileSync(prettierrc, 'utf-8'))
-      : require('cosmiconfig').cosmiconfigSync('prettier').search().config
+module.exports = function volarPrettierPlugin(languages) {
+  const prettierConfig = resolveConfig.sync(resolveConfigFile.sync())
 
   return {
     format(document, range, options) {
@@ -19,14 +15,39 @@ module.exports = function volarPrettierPlugin(languages, prettierrc) {
       if (!languages.includes(document.languageId)) return []
 
       const originalText = document.getText()
-      let formattedText = prettier.format(originalText, {
+
+      let preFormattedText = originalText
+      const isHTML = document.languageId === 'html'
+
+      // Prettier breaks {{'...long line...'}} in <template> tags, without a good fix.
+      // {{'...shorter line...'}} {{'...shorter line...'}} doesn't appear to work.
+      // The only real another fix is <span> {{'...shorter line...'}} </span>
+      const noBreak = new Map()
+      if (isHTML) {
+        preFormattedText = preFormattedText
+          .replace(/ *{{ *(['"][^]+?\1) *}} */g, (p0, p1) => {
+            const id = `{{'${randomUUID()}'}}`
+            p0 = `{{ ${p1} }}`
+            noBreak.set(id, p0)
+            return id
+          })
+          // This one is opinionated, but I just put it here, anyway.
+          .replace(/> ?({{.+?}})/g, '> $1')
+          .replace(/({{.+?}}) ?</g, '$1 <')
+      }
+
+      let formattedText = format(preFormattedText, {
         ...prettierConfig,
         tabWidth: options.tabSize,
         useTabs: !options.insertSpaces,
         filepath: document.uri
       })
 
-      if (document.languageId !== 'html') {
+      if (isHTML) {
+        formattedText = formattedText.replace(/{{'.+?'}}/g, (p0) => {
+          return noBreak.get(p0) || p0
+        })
+      } else {
         formattedText = '\n' + formattedText
       }
 

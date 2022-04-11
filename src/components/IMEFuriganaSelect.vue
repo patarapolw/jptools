@@ -9,9 +9,9 @@ const name = 'IMEFuriganaSelect'
     <summary>
       <b> {{ 'Mode: ' }} </b>
       <span> {{ mode.name }} </span>
-      <span>{{' ('}}</span>
-      <span lang="ja">{{ furiganaSample(mode) }}</span>
-      <span>{{')'}}</span>
+      <span> {{ ' (' }} </span>
+      <span lang="ja"> {{ furiganaSample(mode) }} </span>
+      <span> {{ ')' }} </span>
     </summary>
 
     <nav v-for="[cat, val] in Object.entries(furiganaModes)" :key="cat">
@@ -27,43 +27,40 @@ const name = 'IMEFuriganaSelect'
         <label :for="k">
           <span v-if="k === 'tab'">
             <span> {{ `${v.name}. For pasting into Excel or similar.` }} </span>
-            <span>{{' ('}}</span>
-            <span lang="ja">{{ furiganaSample(v) }}</span>
-            <span>{{')'}}</span>
+            <span> {{ ' (' }} </span>
+            <span lang="ja"> {{ furiganaSample(v) }} </span>
+            <span> {{ ')' }} </span>
           </span>
           <span v-else-if="k === 'space'">
             <span> {{ `${v.name}. Similar to above, but with space.` }} </span>
-            <span>{{' ('}}</span>
-            <span lang="ja">{{ furiganaSample(v)}}</span>
-            <span>{{')'}}</span>
+            <span> {{ ' (' }} </span>
+            <span lang="ja"> {{ furiganaSample(v)}} </span>
+            <span> {{ ')' }} </span>
           </span>
           <span v-else-if="k === 'anki'">
-            <span lang="ja">{{ furiganaSample(v) }}</span>
-            <span>{{' ('}}</span>
+            <span lang="ja"> {{ furiganaSample(v) }} </span>
+            <span> {{ ' (' }} </span>
             <a
               href="https://apps.ankiweb.net/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {{'Anki'}}
+              {{ 'Anki' }}
             </a>
-            <span> {{"'s "}} </span>
+            <span> {{ "'s " }} </span>
             <a
               href="https://ankiweb.net/shared/info/3918629684"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {{'Japanese support'}}
+              {{ 'Japanese support' }}
             </a>
-            <span>
-              {{'. Text is already formatted without plugin installed'}}
-            </span>
-            <span> {{', however.'}} </span>
-            <span>{{')'}}</span>
+            <span> {{ '. Text is already formatted without plugin installed, however.' }} </span>
+            <span> {{ ')' }} </span>
           </span>
           <span v-else-if="k === 'furiganaMarkdownIt'">
-            <span lang="ja">{{ furiganaSample(v) }}</span>
-            <span>{{' ('}}</span>
+            <span lang="ja"> {{ furiganaSample(v) }} </span>
+            <span> {{ ' (' }} </span>
             <a
               href="https://github.com/iltrof/furigana-markdown-it"
               target="_blank"
@@ -71,13 +68,13 @@ const name = 'IMEFuriganaSelect'
             >
               {{ v.name }}
             </a>
-            <span>{{')'}}</span>
+            <span> {{ ')' }} </span>
           </span>
           <span
             v-else-if="k === 'imeToFurigana' || k === 'imeToFuriganaSpoiler'"
           >
-            <span lang="ja">{{ furiganaSample(v) }}</span>
-            <span>{{' ('}}</span>
+            <span lang="ja"> {{ furiganaSample(v) }} </span>
+            <span> {{ ' (' }} </span>
             <a
               href="https://community.wanikani.com/t/userscript-forum-ime2furigana/39109"
               target="_blank"
@@ -85,13 +82,13 @@ const name = 'IMEFuriganaSelect'
             >
               {{ v.name }}
             </a>
-            <span>{{')'}}</span>
+            <span> {{ ')' }} </span>
           </span>
           <span v-else>
-            <span>{{ v.name }}</span>
-            <span>{{' ('}}</span>
+            <span> {{ v.name }} </span>
+            <span> {{ ' (' }} </span>
             <span lang="ja"> {{ furiganaSample(v) }} </span>
-            <span>{{')'}}</span>
+            <span> {{ ')' }} </span>
           </span>
         </label>
       </div>

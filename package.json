@@ -15,6 +15,7 @@
     "wanakana": "^4.0.2"
   },
   "devDependencies": {
+    "@types/prettier": "^2.6.0",
     "@types/wanakana": "^4.0.3",
     "@vitejs/plugin-vue": "^2.3.0",
     "gh-pages": "^3.2.3",

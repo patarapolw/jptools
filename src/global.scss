@@ -3,12 +3,41 @@ body > #app {
   max-width: 800px;
 }
 
-.ja, [lang="ja"], [lang="ja-JP"] {
+.ja, [lang="ja"], [lang="ja-JP"], .output {
   &, & * {
     font-family: "Source Han Sans", "源ノ角ゴシック", "Hiragino Sans", "HiraKakuProN-W3", "Hiragino Kaku Gothic ProN W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "Noto Sans", "Noto Sans CJK JP", "メイリオ", Meiryo, "游ゴシック", YuGothic, "ＭＳ Ｐゴシック", "MS PGothic", "ＭＳ ゴシック", "MS Gothic", sans-serif;
   }
 }
 
+$base-font-size: 18px;
+
 span, a, textarea {
-  font-size: 14pt;
+  font-size: $base-font-size;
+}
+
+textarea, input[type="text"] {
+  border-radius: 6px;
+  border: 1px solid lightgray;
+  font-size: 18px;
+  padding: 0.5em;
+}
+
+.flex {
+  display: flex;
+
+  &-column {
+    flex-direction: column;
+  }
+
+  &-row {
+    flex-direction: row;
+  }
+}
+
+nav.flex-row {
+  margin-bottom: 1em;
+}
+
+.w-100 {
+  width: 100%;
 }

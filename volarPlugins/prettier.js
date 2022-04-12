@@ -42,8 +42,8 @@ module.exports = function volarPrettierPlugin(languages) {
             }
           )
           // This one is opinionated, but I just put it here, anyway.
-          .replace(/> ?({{.+?}})/g, '> $1')
-          .replace(/({{.+?}}) ?</g, '$1 <')
+          .replace(/> ?(\w+|{{.+?}})/g, '> $1')
+          .replace(/(\w+|{{.+?}}) ?</g, '$1 <')
       }
 
       let formattedText = format(preFormattedText, {

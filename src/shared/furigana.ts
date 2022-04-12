@@ -1,86 +1,104 @@
+import MarkdownIt from 'markdown-it'
 import { ref, watch } from 'vue'
+import furigana from 'furigana-markdown-it'
+import { isValidElement } from './check-html-element'
 
 export type MakeRubyFunc = (base: string, furi: string) => string
 
 export interface FuriganaMode {
   key: string
   name: string
-  fn?: MakeRubyFunc
-  sample?: string
+  fn: MakeRubyFunc
 }
 
-export const furiganaModes: {
-  [cat: string]: {
-    [key: string]: FuriganaMode
+const markdownIt = MarkdownIt().use(furigana())
+
+export const markdownModes: {
+  [key: string]: FuriganaMode & {
+    html(s: string): string
   }
 } = {
-  'Plain Text': {
-    tab: {
-      key: '',
-      name: 'Tab-separated',
-      sample: '漢字\tふり'
-    },
-    space: {
-      key: '',
-      name: 'Space-separated',
-      sample: '漢字 ふり'
+  anki: {
+    key: '',
+    name: 'Anki Japanese Support',
+    fn: (base, ruby) => ` ${base}[${ruby}]`,
+    html(s) {
+      return s.replace(/ ([^ ]+)?\[(.+?)\]/g, (_, base, ruby) => {
+        return htmlModes.full.fn(base, ruby)
+      })
     }
   },
-  Markdown: {
-    anki: {
-      key: '',
-      name: 'Anki Japanese Support',
-      fn: (base, ruby) => ` ${base}[${ruby}]`
-    },
-    furiganaMarkdownIt: {
-      key: '',
-      name: 'furigana-markdown-it',
-      fn: (base, ruby) => `[${base}]{${ruby}}`
-    },
-    imeToFurigana: {
-      key: '',
-      name: 'IME2Furigana',
-      fn: (base, ruby) => `<${base}>[${ruby}]`
-    },
-    imeToFuriganaSpoiler: {
-      key: '',
-      name: 'IME2Furigana spoiler',
-      fn: (base, ruby) => `<${base}>{${ruby}}`
+  furiganaMarkdownIt: {
+    key: '',
+    name: 'furigana-markdown-it',
+    fn: (base, ruby) => `[${base}]{${ruby}}`,
+    html(s) {
+      return markdownIt.render(s)
     }
   },
-  HTML: {
-    htmlSimple: {
-      key: '',
-      name: 'Simple HTML',
-      fn: (base, ruby) => `<ruby>${base}<rt>${ruby}</rt></ruby>`
-    },
-    htmlFallback: {
-      key: '',
-      name: 'HTML with fallback',
-      fn: (base, ruby) =>
-        `<ruby><rp> </rp>${base}<rp>(</rp><rt>${ruby}</rt><rp>)</rp></ruby>`
+  imeToFurigana: {
+    key: '',
+    name: 'IME2Furigana',
+    fn: (base, ruby) => `<${base}>[${ruby}]`,
+    html(s) {
+      return markdownIt.render(
+        s.replace(/<(.+?)>\[(.+?)\]/g, (raw, base, ruby) => {
+          if (isValidElement(base.split(' ')[0])) {
+            return raw
+          }
+          return htmlModes.full.fn(base, ruby)
+        })
+      )
     }
   }
 }
 
-const MODE_KEY = 'FURIGANA_MODE'
-const modeName = localStorage.getItem(MODE_KEY) || 'tab'
+const MARKDOWN_MODE_KEY = 'MARKDOWN_MODE'
+const markdownModeName =
+  localStorage.getItem(MARKDOWN_MODE_KEY) || Object.keys(markdownModes)[0]
 
-export const mode = ref<FuriganaMode>({} as FuriganaMode)
+export const markdownMode = ref<FuriganaMode>({} as FuriganaMode)
 
-Object.values(furiganaModes).map((o) =>
-  Object.entries(o).map(([key, v]) => {
-    v.key = key
-    if (key === modeName) {
-      mode.value = v
-    }
-  })
-)
+Object.entries(markdownModes).map(([key, v]) => {
+  v.key = key
+  if (key === markdownModeName) {
+    markdownMode.value = v
+  }
+})
 
-watch(mode, () => {
-  localStorage.setItem(MODE_KEY, mode.value.key)
+watch(markdownMode, () => {
+  localStorage.setItem(MARKDOWN_MODE_KEY, markdownMode.value.key)
+})
+
+export const htmlModes: {
+  [key: string]: FuriganaMode
+} = {
+  simple: {
+    key: '',
+    name: 'Simple HTML',
+    fn: (base, ruby) => `<ruby>${base}<rt>${ruby}</rt></ruby>`
+  },
+  full: {
+    key: '',
+    name: 'HTML with fallback',
+    fn: (base, ruby) =>
+      `<ruby><rp> </rp>${base}<rp>(</rp><rt>${ruby}</rt><rp>)</rp></ruby>`
+  }
+}
+
+const HTML_MODE_KEY = 'HTML_MODE'
+const htmlModeName =
+  localStorage.getItem(HTML_MODE_KEY) || Object.keys(htmlModes)[0]
+
+export const htmlMode = ref<FuriganaMode>({} as FuriganaMode)
+
+Object.entries(htmlModes).map(([key, v]) => {
+  v.key = key
+  if (key === htmlModeName) {
+    htmlMode.value = v
+  }
 })
 
 export function furiganaSample(m: FuriganaMode) {
-  return m.fn?.('漢字', 'ふり') || m.sample
+  return m.fn('漢字', 'ふり')
 }

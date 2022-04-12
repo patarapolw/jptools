@@ -1,20 +1,46 @@
 <script lang="ts" setup>
-import { furiganaSample, furiganaModes, mode } from '@/shared/furigana'
+import {
+  FuriganaMode,
+  furiganaSample,
+  htmlMode,
+  htmlModes,
+  markdownMode,
+  markdownModes
+} from '@/shared/furigana'
+import { ref, watch } from 'vue'
+
+const props = defineProps<{
+  mode: FuriganaMode
+}>()
 
 const name = 'IMEFuriganaSelect'
+const modes = {
+  Markdown: markdownModes,
+  HTML: htmlModes
+}
+
+const currentMode = ref<FuriganaMode>(props.mode)
+
+watch(currentMode, () => {
+  if (markdownModes[currentMode.value.key]) {
+    markdownMode.value = currentMode.value
+  } else {
+    htmlMode.value = currentMode.value
+  }
+})
 </script>
 
 <template>
   <details class="options-collapse">
     <summary>
       <b> {{ 'Mode: ' }} </b>
-      <span> {{ mode.name }} </span>
+      <span> {{ currentMode.name }} </span>
       <span> {{ ' (' }} </span>
-      <span lang="ja"> {{ furiganaSample(mode) }} </span>
+      <span lang="ja"> {{ furiganaSample(currentMode) }} </span>
       <span> {{ ')' }} </span>
     </summary>
 
-    <nav v-for="[cat, val] in Object.entries(furiganaModes)" :key="cat">
+    <nav v-for="[cat, val] in Object.entries(modes)" :key="cat">
       <h3>{{ cat }}</h3>
       <div class="field" v-for="[k, v] in Object.entries(val)" :key="k">
         <input
@@ -22,24 +48,10 @@ const name = 'IMEFuriganaSelect'
           type="radio"
           :name="name"
           :checked="mode.name === v.name"
-          @change="mode = v"
+          @change="currentMode = v"
         />
         <label :for="k">
-          <span v-if="k === 'tab'">
-            <span> {{ `${v.name}. For pasting into Excel or similar.` }} </span>
-            <span> {{ ' (' }} </span>
-            <span lang="ja"> {{ furiganaSample(v) }} </span>
-            <span> {{ ')' }} </span>
-          </span>
-          <span v-else-if="k === 'space'">
-            <span> {{ `${v.name}. Similar to above, but with space.` }} </span>
-            <span> {{ ' (' }} </span>
-            <span lang="ja"> {{ furiganaSample(v)}} </span>
-            <span> {{ ')' }} </span>
-          </span>
-          <span v-else-if="k === 'anki'">
-            <span lang="ja"> {{ furiganaSample(v) }} </span>
-            <span> {{ ' (' }} </span>
+          <span v-if="k === 'anki'">
             <a
               href="https://apps.ankiweb.net/"
               target="_blank"
@@ -55,12 +67,8 @@ const name = 'IMEFuriganaSelect'
             >
               {{ 'Japanese support' }}
             </a>
-            <span> {{ '. Text is already formatted without plugin installed, however.' }} </span>
-            <span> {{ ')' }} </span>
           </span>
           <span v-else-if="k === 'furiganaMarkdownIt'">
-            <span lang="ja"> {{ furiganaSample(v) }} </span>
-            <span> {{ ' (' }} </span>
             <a
               href="https://github.com/iltrof/furigana-markdown-it"
               target="_blank"
@@ -68,13 +76,19 @@ const name = 'IMEFuriganaSelect'
             >
               {{ v.name }}
             </a>
-            <span> {{ ')' }} </span>
+          </span>
+          <span v-else-if="k === 'furiganaMarkdownIt'">
+            <a
+              href="https://github.com/iltrof/furigana-markdown-it"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ v.name }}
+            </a>
           </span>
           <span
             v-else-if="k === 'imeToFurigana' || k === 'imeToFuriganaSpoiler'"
           >
-            <span lang="ja"> {{ furiganaSample(v) }} </span>
-            <span> {{ ' (' }} </span>
             <a
               href="https://community.wanikani.com/t/userscript-forum-ime2furigana/39109"
               target="_blank"
@@ -82,14 +96,13 @@ const name = 'IMEFuriganaSelect'
             >
               {{ v.name }}
             </a>
-            <span> {{ ')' }} </span>
           </span>
-          <span v-else>
-            <span> {{ v.name }} </span>
-            <span> {{ ' (' }} </span>
-            <span lang="ja"> {{ furiganaSample(v) }} </span>
-            <span> {{ ')' }} </span>
-          </span>
+
+          <span v-else> {{ v.name }} </span>
+
+          <span> {{ ' (' }} </span>
+          <span lang="ja"> {{ furiganaSample(v) }} </span>
+          <span> {{ ')' }} </span>
         </label>
       </div>
     </nav>

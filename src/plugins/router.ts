@@ -16,8 +16,12 @@ export const router = createRouter({
       component: () => import('@/pages/furigana.vue')
     },
     {
-      path: '/keyboard',
-      component: () => import('@/pages/keyboard.vue')
+      path: '/reading',
+      component: () => import('@/pages/reading.vue')
+    },
+    {
+      path: '/kana',
+      component: () => import('@/pages/kana.vue')
     },
     {
       path: '/:pathMatch(.*)*',

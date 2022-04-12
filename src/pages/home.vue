@@ -14,18 +14,6 @@ import H from '@/components/H.vue'
       <li>
         <div class="listing-item">
           <div class="description">
-            <router-link to="/furigana"> IME2Furigana keyboard </router-link>
-            <span> {{ ' (use this to paste into Excel or similar)' }} </span>
-          </div>
-          <IMEFuriganaKeyboard
-            :mode="furiganaModes['Plain Text'].tab"
-            height="200px"
-          />
-        </div>
-      </li>
-      <li>
-        <div class="listing-item">
-          <div class="description">
             <router-link to="/keyboard"> Kana keyboard </router-link>
             <span> {{ ' (powered by ' }} </span>
             <a
@@ -38,6 +26,20 @@ import H from '@/components/H.vue'
             <span> {{ ')' }} </span>
           </div>
           <KanaKeyboard height="200px" />
+        </div>
+      </li>
+      <li>
+        <div class="listing-item">
+          <div class="description">
+            <router-link to="/furigana">
+              Reading / Furigana keyboard
+            </router-link>
+            <span> {{ ' (use this to paste into Excel or similar)' }} </span>
+          </div>
+          <IMEFuriganaKeyboard
+            :mode="furiganaModes['Plain Text'].tab"
+            height="200px"
+          />
         </div>
       </li>
     </ul>

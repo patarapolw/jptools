@@ -108,17 +108,27 @@ function addFurigana(ev: Event) {
 </script>
 
 <template>
-  <textarea
-    :ref="(el) => elTextArea = el"
-    lang="ja"
-    placeholder="Any Japanese typed with an IME here will retain its Furigana..."
-    @compositionupdate="onTextAreaUpdate"
-    @compositionend="addFurigana"
-    :style="{ height: height || '300px' }"
-  ></textarea>
+  <div class="IMEFuriganaKeyboard">
+    <textarea
+      :ref="(el) => elTextArea = el"
+      lang="ja"
+      placeholder="Any Japanese typed with an IME here will retain its Furigana..."
+      @compositionupdate="onTextAreaUpdate"
+      @compositionend="addFurigana"
+      :style="{ height: height || '300px' }"
+    ></textarea>
+    <div class="output-container">
+      <div class="output"></div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+.IMEFuriganaKeyboard {
+  display: flex;
+  flex-direction: column;
+}
+
 textarea {
   border-radius: 6px;
   border: 1px solid lightgray;

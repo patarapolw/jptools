@@ -41,7 +41,9 @@ function makeKanaFromInput(ev: Event) {
       @input="makeKanaFromInput"
       :style="{ height: height || '300px' }"
     ></textarea>
-    <div class="output"></div>
+    <div class="output-container">
+      <div class="output"></div>
+    </div>
   </div>
 </template>
 

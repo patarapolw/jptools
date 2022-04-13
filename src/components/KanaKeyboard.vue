@@ -31,7 +31,7 @@ function makeKanaFromInput(ev: Event) {
 </script>
 
 <template>
-  <div class="flex flex-column">
+  <div :style="{ display: 'flex', 'flex-direction': 'column' }">
     <textarea
       :ref="(el) => elTextArea = el"
       lang="ja"
@@ -39,9 +39,6 @@ function makeKanaFromInput(ev: Event) {
       :value="currentText"
       @input="makeKanaFromInput"
       :style="{ height: mini ? '200px' : '300px' }"
-    ></textarea>
-    <div class="output-container">
-      <div class="output"></div>
-    </div>
+    />
   </div>
 </template>

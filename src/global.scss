@@ -22,22 +22,6 @@ textarea, input[type="text"] {
   padding: 0.5em;
 }
 
-.flex {
-  display: flex;
-
-  &-column {
-    flex-direction: column;
-  }
-
-  &-row {
-    flex-direction: row;
-  }
-}
-
-nav.flex-row {
-  margin-bottom: 1em;
-}
-
-.w-100 {
-  width: 100%;
+.flex-grow {
+  flex-grow: 1;
 }

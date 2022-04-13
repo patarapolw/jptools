@@ -10,6 +10,7 @@ import {
   furiganaSample,
   htmlModes
 } from '@/shared/furigana'
+
 import type { WritingModeProperty } from 'csstype'
 
 const props = defineProps<{
@@ -128,7 +129,7 @@ function addFurigana(ev: Event) {
 </script>
 
 <template>
-  <div class="flex flex-column">
+  <div :style="{ display: 'flex', 'flex-direction': 'column' }">
     <details v-if="!mini" class="options-collapse">
       <summary>
         <b> {{ 'Mode: ' }} </b>
@@ -224,6 +225,18 @@ function addFurigana(ev: Event) {
       @compositionupdate="onTextAreaUpdate"
       @compositionend="addFurigana"
     />
+
+    <nav v-if="!mini">
+      <div class="flex-grow"></div>
+      <select v-model="writingMode">
+        <option value="horizontal-tb" lang="ja">Horizontal</option>
+        <option value="vertical-rl" lang="ja">
+          Standard vertical (縦書き)
+        </option>
+        <option value="vertical-lr" lang="ja">Vertical Left-to-right</option>
+      </select>
+    </nav>
+
     <div
       :class="{ output: true, mini }"
       :style="{ writingMode }"
@@ -252,5 +265,15 @@ textarea {
 
 .output.mini {
   height: 60px;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+
+  * + & {
+    margin-top: 1em;
+  }
 }
 </style>

@@ -1,7 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import { ref, watch } from 'vue'
 import furigana from 'furigana-markdown-it'
-import { isValidElement } from './check-html-element'
 
 export type MakeRubyFunc = (base: string, furi: string) => string
 
@@ -42,10 +41,7 @@ export const markdownModes: {
     fn: (base, ruby) => `<${base}>[${ruby}]`,
     html(s) {
       return markdownIt.render(
-        s.replace(/<(.+?)>\[(.+?)\]/g, (raw, base, ruby) => {
-          if (isValidElement(base.split(' ')[0])) {
-            return raw
-          }
+        s.replace(/<(.+?)>\[(.+?)\]/g, (_, base, ruby) => {
           return htmlModes.full.fn(base, ruby)
         })
       )

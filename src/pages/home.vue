@@ -11,8 +11,8 @@ import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
 
     <ul>
       <li>
-        <div class="flex flex-column w-100">
-          <div class="description">
+        <div>
+          <div>
             <router-link to="/kana"> Kana keyboard </router-link>
             <span> {{ ' (powered by ' }} </span>
             <a
@@ -28,8 +28,8 @@ import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
         </div>
       </li>
       <li>
-        <div class="flex flex-column w-100">
-          <div class="description">
+        <div>
+          <div>
             <router-link to="/reading">
               Auto-insert reading keyboard
             </router-link>
@@ -39,8 +39,8 @@ import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
         </div>
       </li>
       <li>
-        <div class="flex flex-column w-100">
-          <div class="description">
+        <div>
+          <div>
             <router-link to="/furigana"> Auto-Furigana keyboard </router-link>
             <span> {{ ' (use this to generate Markdown or HTML)' }} </span>
           </div>
@@ -52,8 +52,14 @@ import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
 </template>
 
 <style lang="scss" scoped>
-.description {
-  margin-top: 1em;
-  margin-bottom: 1em;
+li > div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  > :first-child {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
 }
 </style>

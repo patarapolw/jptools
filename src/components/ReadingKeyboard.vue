@@ -82,10 +82,10 @@ function addFurigana(ev: Event) {
 </script>
 
 <template>
-  <div class="flex flex-column">
-    <nav v-if="!mini" class="flex flex-row">
+  <div :style="{ display: 'flex', 'flex-direction': 'column' }">
+    <nav v-if="!mini">
       <label> Mode:</label>
-      <div class="field">
+      <div class="field flex-grow">
         <input
           type="radio"
           name="ReadingKeyboardMode"
@@ -97,7 +97,7 @@ function addFurigana(ev: Event) {
           Tab (more suitable for Excel)
         </label>
       </div>
-      <div class="field">
+      <div class="field flex-grow">
         <input
           type="radio"
           name="ReadingKeyboardMode"
@@ -115,19 +115,18 @@ function addFurigana(ev: Event) {
       @compositionupdate="onTextAreaUpdate"
       @compositionend="addFurigana"
       :style="{ height: mini ? '200px' : '300px' }"
-    ></textarea>
-    <div class="output-container">
-      <div class="output"></div>
-    </div>
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
-nav > label {
-  width: 4em;
-}
+nav {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
 
-.field {
-  flex-grow: 1;
+  > label {
+    width: 4em;
+  }
 }
 </style>

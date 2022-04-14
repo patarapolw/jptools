@@ -139,7 +139,7 @@ function addFurigana(ev: Event) {
         <span> {{ ')' }} </span>
       </summary>
 
-      <nav v-for="[cat, val] in Object.entries(modes)" :key="cat">
+      <section v-for="[cat, val] in Object.entries(modes)" :key="cat">
         <h3>{{ cat }}</h3>
         <div class="field" v-for="[k, v] in Object.entries(val)" :key="k">
           <input
@@ -204,7 +204,7 @@ function addFurigana(ev: Event) {
             <span> {{ ')' }} </span>
           </label>
         </div>
-      </nav>
+      </section>
     </details>
     <input
       v-if="mini"
@@ -252,6 +252,10 @@ function addFurigana(ev: Event) {
   summary {
     font-size: 18px;
     cursor: pointer;
+  }
+
+  section {
+    margin-bottom: 1em;
   }
 }
 

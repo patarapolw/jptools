@@ -78,7 +78,7 @@ export const htmlModes: {
     key: '',
     name: 'HTML with fallback',
     fn: (base, ruby) =>
-      `<ruby><rp> </rp>${base}<rp>(</rp><rt>${ruby}</rt><rp>)</rp></ruby>`
+      `<ruby><rp> </rp>${base}<rp>【</rp><rt>${ruby}</rt><rp>】</rp></ruby>`
   }
 }
 

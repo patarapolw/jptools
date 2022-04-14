@@ -1,0 +1,31 @@
+{
+  "name": "tag-matcher",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "Match HTML, XML, BBCode tags; or even simply brackets",
+  "author": {
+    "name": "Pacharapol Withayasakpunt",
+    "email": "polv@polv.cc",
+    "url": "https://www.polv.cc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patarapolw/jp-tools"
+  },
+  "keywords": [
+    "html",
+    "bbcode",
+    "bb-code",
+    "brackets"
+  ],
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "importSort": {
+    ".js, .ts, .vue": {
+      "parser": "typescript",
+      "style": "module"
+    }
+  }
+}

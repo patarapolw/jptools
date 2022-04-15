@@ -55,7 +55,6 @@ import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
 li > div {
   display: flex;
   flex-direction: column;
-  width: 100%;
 
   > :first-child {
     margin-top: 1em;

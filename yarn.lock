@@ -155,6 +155,14 @@
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-2.3.1.tgz#5f286b8d3515381c6d5c8fa8eee5e6335f727e14"
   integrity sha512-YNzBt8+jt6bSwpt7LP890U1UcTOIZZxfpE5WOJ638PNxSEKOqAi0+FSKS0nVeukfdZ0Ai/H7AFd6k3hayfGZqQ==
 
+"@volar-plugins/prettier@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@volar-plugins/prettier/-/prettier-1.1.3.tgz#c04d73d8bb0ddf08373c5bf705fc6a3c98f84e5b"
+  integrity sha512-T8N5zHuUHufZI0DVqOadNbEjmpi2XG+3gCTbFyEe3P7DOlp/bYXWaDCcbhoVvRC/jSAck6dD08qLS7zAHrSqWQ==
+  dependencies:
+    prettier "^2.6.2"
+    vscode-uri "^3.0.3"
+
 "@volar/code-gen@0.29.8":
   version "0.29.8"
   resolved "https://registry.yarnpkg.com/@volar/code-gen/-/code-gen-0.29.8.tgz#db1a4bf29caeba131265bed9dbe96a1a0b66ea35"

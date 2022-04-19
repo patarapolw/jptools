@@ -4,11 +4,14 @@
       "path": "."
     },
     {
+      "path": "packages/markdown-furigana"
+    },
+    {
       "path": "packages/tag-matcher"
     },
     {
-      "path": "packages/markdown-furigana"
-    }
+      "path": "packages/www"
+    },
   ],
   "settings": {
     "files.associations": {

@@ -1,4 +1,4 @@
-# Vite on Github Pages with HTML5 History Mode
+# Multiple page Vite on Github Pages with HTML5 History Mode
 
 Indeed, one of the way is simply [pre-render](https://vitejs.dev/guide/ssr.html) (e.g. with [vite-plugin-ssr](https://vite-plugin-ssr.com/)).
 
@@ -100,11 +100,21 @@ import { sync as glob } from 'fast-glob'
 
 // ...
 
+      const PAGE_EXT = '.vue'
+      const PAGE_INDEX = 'index'
+
       routes.push(
-        ...glob('**/*.vue', {
+        ...glob(`**/*${PAGE_EXT}`, {
           cwd: 'src/pages',
         })
-          .map((p) => p.replace(/\.vue$/, '').replace(/\/index$/, ''))
-          .filter((p) => p !== 'index'),
+          .map((p) => {
+            p = p.substring(0, p.length - PAGE_EXT.length)
+            if (p.endsWith('/' + PAGE_INDEX)) {
+              p = p.substring(0, p.length - PAGE_INDEX.length - 1)
+            }
+
+            return p
+          })
+          .filter((p) => p !== PAGE_INDEX),
       )
 ```

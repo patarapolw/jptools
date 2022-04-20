@@ -18,12 +18,22 @@ function cloneIndexHtmlPlugin(routes: string[] = []): PluginOption {
   return {
     name,
     closeBundle: () => {
+      const PAGE_EXT = '.vue'
+      const PAGE_INDEX = 'index'
+
       routes.push(
-        ...glob('**/*.vue', {
+        ...glob(`**/*${PAGE_EXT}`, {
           cwd: 'src/pages',
         })
-          .map((p) => p.replace(/\.vue$/, '').replace(/\/index$/, ''))
-          .filter((p) => p !== 'index'),
+          .map((p) => {
+            p = p.substring(0, p.length - PAGE_EXT.length)
+            if (p.endsWith('/' + PAGE_INDEX)) {
+              p = p.substring(0, p.length - PAGE_INDEX.length - 1)
+            }
+
+            return p
+          })
+          .filter((p) => p !== PAGE_INDEX),
       )
 
       routes.map((p) => {

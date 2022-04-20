@@ -1,0 +1,1 @@
+import{I as t}from"./IMEFuriganaKeyboard.e01c7c42.js";import{H as o}from"./H.185e5afc.js";import{d as a,o as r,c as s,a as e,w as n,b as c}from"./index.0ebbd064.js";import"./toKana.ff5d023d.js";const i=c(" IME to Furigana "),x=a({setup(m){return(p,l)=>(r(),s("section",null,[e(o,{level:1},{default:n(()=>[i]),_:1}),e(t)]))}});export{x as default};

@@ -1,0 +1,1 @@
+import{R as t}from"./ReadingKeyboard.f34eef81.js";import{H as o}from"./H.185e5afc.js";import{d as a,o as r,c as s,a as e,w as n,b as c}from"./index.0ebbd064.js";const d=c(" Auto-insert reading keyboard "),u=a({setup(i){return(l,m)=>(r(),s("section",null,[e(o,{level:1},{default:n(()=>[d]),_:1}),e(t)]))}});export{u as default};

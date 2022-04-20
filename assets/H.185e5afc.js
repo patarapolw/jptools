@@ -1,0 +1,1 @@
+import{_ as a,d as n,o as r,q as l,w as _,s as p,x as c,u}from"./index.0ebbd064.js";const d=n({props:{level:null},setup(o){const e=Math.floor(o.level),t=e<1?"h1":e>6?"h6":`h${e}`;return(s,f)=>(r(),l(c(u(t)),null,{default:_(()=>[p(s.$slots,"default",{},void 0,!0)]),_:3}))}});var i=a(d,[["__scopeId","data-v-392a972d"]]);export{i as H};

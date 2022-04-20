@@ -7,8 +7,8 @@ module.exports = {
       languages: ['html', 'css', 'scss', 'less', 'typescript', 'javascript'],
       html: {
         keepLongTemplates: true,
-        breakContentsFromTags: true
-      }
-    })
-  ]
+        breakContentsFromTags: true,
+      },
+    }),
+  ],
 }

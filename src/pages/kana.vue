@@ -5,7 +5,7 @@ import H from '@/components/H.vue'
 
 <template>
   <section>
-    <H :level="1">Kana keyboard</H>
+    <H :level="1"> Kana keyboard </H>
 
     <p>
       <span> {{ 'Powered by ' }} </span>

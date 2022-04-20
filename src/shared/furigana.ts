@@ -25,7 +25,7 @@ export const markdownModes: {
       return s.replace(/ ([^ ]+)?\[(.+?)\]/g, (_, base, ruby) => {
         return htmlModes.full.fn(base, ruby)
       })
-    }
+    },
   },
   furiganaMarkdownIt: {
     key: '',
@@ -33,7 +33,7 @@ export const markdownModes: {
     fn: (base, ruby) => `[${base}]{${ruby}}`,
     html(s) {
       return markdownIt.render(s)
-    }
+    },
   },
   imeToFurigana: {
     key: '',
@@ -43,10 +43,10 @@ export const markdownModes: {
       return markdownIt.render(
         s.replace(/<(.+?)>\[(.+?)\]/g, (_, base, ruby) => {
           return htmlModes.full.fn(base, ruby)
-        })
+        }),
       )
-    }
-  }
+    },
+  },
 }
 
 const MARKDOWN_MODE_KEY = 'MARKDOWN_MODE'
@@ -72,14 +72,14 @@ export const htmlModes: {
   simple: {
     key: '',
     name: 'Simple HTML',
-    fn: (base, ruby) => `<ruby>${base}<rt>${ruby}</rt></ruby>`
+    fn: (base, ruby) => `<ruby>${base}<rt>${ruby}</rt></ruby>`,
   },
   full: {
     key: '',
     name: 'HTML with fallback',
     fn: (base, ruby) =>
-      `<ruby><rp> </rp>${base}<rp>【</rp><rt>${ruby}</rt><rp>】</rp></ruby>`
-  }
+      `<ruby><rp> </rp>${base}<rp>【</rp><rt>${ruby}</rt><rp>】</rp></ruby>`,
+  },
 }
 
 const HTML_MODE_KEY = 'HTML_MODE'

@@ -7,7 +7,7 @@ const props = defineProps<{
 
 const modes = {
   tab: '\t',
-  space: ' '
+  space: ' ',
 }
 
 const MODE_KEY = 'READING_KEYBOARD_MODE'
@@ -74,7 +74,7 @@ function addFurigana(ev: Event) {
         output.join(sep),
         target.selectionStart,
         target.selectionStart,
-        'end'
+        'end',
       )
     }
   }
@@ -84,7 +84,7 @@ function addFurigana(ev: Event) {
 <template>
   <div :style="{ display: 'flex', 'flex-direction': 'column' }">
     <nav v-if="!mini">
-      <label> Mode:</label>
+      <label> Mode: </label>
       <div class="field flex-grow">
         <input
           type="radio"
@@ -109,7 +109,7 @@ function addFurigana(ev: Event) {
       </div>
     </nav>
     <textarea
-      :ref="(el) => elTextArea = el"
+      :ref="(el) => (elTextArea = el)"
       lang="ja"
       placeholder="Any Japanese typed with an IME here will output its Furigana..."
       @compositionupdate="onTextAreaUpdate"

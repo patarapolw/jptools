@@ -6,7 +6,7 @@ export function tryCreateElement(tag: string) {
     element,
     tag,
     type: 'standard',
-    isValid: repr !== '[object HTMLUnknownElement]'
+    isValid: repr !== '[object HTMLUnknownElement]',
   }
 
   if (
@@ -18,7 +18,7 @@ export function tryCreateElement(tag: string) {
       'font-face-uri',
       'font-face-format',
       'font-face-name',
-      'missing-glyph'
+      'missing-glyph',
     ].includes(tag)
   ) {
     // These are not valid customElement identifiers

@@ -24,7 +24,7 @@ function makeKanaFromInput(ev: Event) {
   if (target instanceof HTMLTextAreaElement) {
     currentText.value = toKana(target.value, {
       IMEMode: inputType !== 'insertFromPaste',
-      useObsoleteKana: true
+      useObsoleteKana: true,
     })
   }
 }
@@ -33,7 +33,7 @@ function makeKanaFromInput(ev: Event) {
 <template>
   <div :style="{ display: 'flex', 'flex-direction': 'column' }">
     <textarea
-      :ref="(el) => elTextArea = el"
+      :ref="(el) => (elTextArea = el)"
       lang="ja"
       placeholder="English alphabets will conveniently converted to Kana. (Hiragana for lowercase, Katakana for uppercase.)"
       :value="currentText"

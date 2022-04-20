@@ -8,7 +8,7 @@ import {
   htmlMode,
   markdownModes,
   furiganaSample,
-  htmlModes
+  htmlModes,
 } from '@/shared/furigana'
 
 import type { WritingModeProperty } from 'csstype'
@@ -19,7 +19,7 @@ const props = defineProps<{
 
 const modes = {
   Markdown: markdownModes,
-  HTML: htmlModes
+  HTML: htmlModes,
 }
 
 const placeholder =
@@ -93,13 +93,13 @@ function addFurigana(ev: Event) {
                   ? '.+'
                   : Array.from(p)
                       .map((c) =>
-                        isKana(c) ? `[${toKatakana(c)}${toHiragana(c)}]` : c
+                        isKana(c) ? `[${toKatakana(c)}${toHiragana(c)}]` : c,
                       )
                       .join('')) +
-                ')'
+                ')',
             )
             .join('') +
-          '$'
+          '$',
       )
       let rt = furi.match(regex) || []
       if (!rt.length) {
@@ -121,7 +121,7 @@ function addFurigana(ev: Event) {
           .join(''),
         from,
         to,
-        'end'
+        'end',
       )
     }
   }
@@ -209,7 +209,7 @@ function addFurigana(ev: Event) {
     <input
       v-if="mini"
       type="text"
-      :ref="(el) => elTextArea = el"
+      :ref="(el) => (elTextArea = el)"
       lang="ja"
       v-model="raw"
       :placeholder="placeholder"
@@ -218,7 +218,7 @@ function addFurigana(ev: Event) {
     />
     <textarea
       v-else
-      :ref="(el) => elTextArea = el"
+      :ref="(el) => (elTextArea = el)"
       lang="ja"
       v-model="raw"
       :placeholder="placeholder"

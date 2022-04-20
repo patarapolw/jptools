@@ -2,7 +2,7 @@
 
 Indeed, one of the way is simply [pre-render](https://vitejs.dev/guide/ssr.html) (e.g. with [vite-plugin-ssr](https://vite-plugin-ssr.com/)).
 
-Nonetheless, it is possible to enable fallback, if you don't want to pre-render, and sacrifice JavaScript-ness yet. The way is, to clone `dist/index.html` to `dist/sub/route/index.html`.
+Nonetheless, it is possible to enable fallback (without redirect settings, which doesn't exist in Github Pages), if you don't want to pre-render, and sacrifice JavaScript-ness yet. The way is, to clone `dist/index.html` to `dist/sub/route/index.html`. (SSG's also have multple `**/index.html`.)
 
 ```ts
 import { existsSync, mkdirSync, copyFileSync } from 'fs'

@@ -14,7 +14,7 @@ touch .nojekyll
 git init
 git checkout -b gh-pages
 git add -A
-git commit -m 'deploy script'
+git commit -m 'deployed by gh-deploy.sh'
 git push -f $GIT_URL gh-pages
 
 cd -

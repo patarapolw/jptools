@@ -5,8 +5,10 @@ import { defineConfig, PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { sync as glob } from 'fast-glob'
 
-// @ts-ignore
-const __IS_GITHUB_PAGES__ = process.env.GH
+let BASE_URL = '/'
+if (process.env.GH) {
+  BASE_URL = '/jptools/'
+}
 
 function cloneIndexHtmlPlugin(): PluginOption {
   const name = 'CloneIndexHtmlPlugin'
@@ -15,7 +17,7 @@ function cloneIndexHtmlPlugin(): PluginOption {
     name,
     closeBundle: () => {
       glob('**/*.vue', {
-        cwd: 'src/pages'
+        cwd: 'src/pages',
       }).map((p) => {
         const path = p.replace(/\.vue$/, '').replace(/\/index/, '')
         if (path !== 'index') {
@@ -31,18 +33,15 @@ function cloneIndexHtmlPlugin(): PluginOption {
           console.log(`${name}: Copied ${src} to ${dst}`)
         }
       })
-    }
+    },
   }
 }
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: __IS_GITHUB_PAGES__ ? '/jptools/' : '',
+  base: BASE_URL,
   plugins: [vue(), cloneIndexHtmlPlugin()],
-  define: {
-    __IS_GITHUB_PAGES__
-  },
   resolve: {
-    alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }]
-  }
+    alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }],
+  },
 })

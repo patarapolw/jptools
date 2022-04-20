@@ -8,7 +8,7 @@
     "lint": "vue-tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview",
-    "gh-pages": "GH=1 yarn build && gh-pages -d dist"
+    "gh-pages": "./gh-deploy.sh"
   },
   "dependencies": {
     "furigana-markdown-it": "patarapolw/furigana-markdown-it#v1.0.3ts",
@@ -26,7 +26,6 @@
     "@volar-plugins/prettier": "^1.1.3",
     "expect": "^27.5.1",
     "fast-glob": "^3.2.11",
-    "gh-pages": "^3.2.3",
     "mocha": "^9.2.2",
     "sass": "^1.50.0",
     "ts-mocha": "^9.0.2",

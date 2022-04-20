@@ -1,31 +1,26 @@
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory
-} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 export const router = createRouter({
-  history: __IS_GITHUB_PAGES__ ? createWebHashHistory() : createWebHistory(),
+  history: createWebHistory(),
   routes: [
-    {
-      path: '/',
-      component: () => import('@/pages/home.vue')
-    },
-    {
-      path: '/furigana',
-      component: () => import('@/pages/furigana.vue')
-    },
-    {
-      path: '/reading',
-      component: () => import('@/pages/reading.vue')
-    },
-    {
-      path: '/kana',
-      component: () => import('@/pages/kana.vue')
-    },
-    {
-      path: '/:pathMatch(.*)*',
-      component: () => import('@/pages/home.vue')
-    }
+    // Does not allow string templating, also @/ is resolved to ../
+    ...Object.entries(import.meta.glob('../pages/**/*.vue')).map(([p, imp]) => {
+      const PAGE_DIR = '../pages'
+      const PAGE_EXT = '.vue'
+      const PAGE_INDEX = 'index'
+
+      let path = p.substring(PAGE_DIR.length, p.length - PAGE_EXT.length)
+      if (path.endsWith(PAGE_INDEX)) {
+        path = path.substring(0, path.length - PAGE_INDEX.length - 1)
+      }
+      if (!path) {
+        path = '/'
+      }
+
+      return {
+        path,
+        component: () => imp()
+      }
+    })
   ]
 })

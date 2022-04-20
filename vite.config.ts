@@ -1,20 +1,48 @@
-// @ts-ignore
-import path from 'path'
+import { existsSync, mkdirSync, copyFileSync } from 'fs'
+import { resolve as pathResolve, join as pathJoin } from 'path'
 
-import { defineConfig } from 'vite'
+import { defineConfig, PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { sync as glob } from 'fast-glob'
 
 // @ts-ignore
 const __IS_GITHUB_PAGES__ = process.env.GH
 
+function cloneIndexHtmlPlugin(): PluginOption {
+  const name = 'CloneIndexHtmlPlugin'
+
+  return {
+    name,
+    closeBundle: () => {
+      glob('**/*.vue', {
+        cwd: 'src/pages'
+      }).map((p) => {
+        const path = p.replace(/\.vue$/, '').replace(/\/index/, '')
+        if (path !== 'index') {
+          const dir = pathResolve('dist', path)
+          if (!existsSync(dir)) {
+            mkdirSync(dir, { recursive: true })
+          }
+
+          const src = 'dist/index.html'
+          const dst = pathJoin('dist', path + '/index.html')
+
+          copyFileSync(src, dst)
+          console.log(`${name}: Copied ${src} to ${dst}`)
+        }
+      })
+    }
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: __IS_GITHUB_PAGES__ ? '/jptools/' : '',
-  plugins: [vue()],
+  plugins: [vue(), cloneIndexHtmlPlugin()],
   define: {
     __IS_GITHUB_PAGES__
   },
   resolve: {
-    alias: [{ find: /^@\/(.+)$/, replacement: path.resolve('src', '$1') }]
+    alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }]
   }
 })

@@ -10,28 +10,31 @@ if (process.env.GH) {
   BASE_URL = '/jptools/'
 }
 
-function cloneIndexHtmlPlugin(): PluginOption {
+function cloneIndexHtmlPlugin(routes: string[] = []): PluginOption {
   const name = 'CloneIndexHtmlPlugin'
 
   return {
     name,
     closeBundle: () => {
-      glob('**/*.vue', {
-        cwd: 'src/pages',
-      }).map((p) => {
-        const path = p.replace(/\.vue$/, '').replace(/\/index/, '')
-        if (path !== 'index') {
-          const dir = pathResolve('dist', path)
-          if (!existsSync(dir)) {
-            mkdirSync(dir, { recursive: true })
-          }
+      routes.push(
+        ...glob('**/*.vue', {
+          cwd: 'src/pages',
+        })
+          .map((p) => p.replace(/\.vue$/, '').replace(/\/index$/, ''))
+          .filter((p) => p !== 'index'),
+      )
 
-          const src = 'dist/index.html'
-          const dst = pathJoin('dist', path + '/index.html')
-
-          copyFileSync(src, dst)
-          console.log(`${name}: Copied ${src} to ${dst}`)
+      routes.map((p) => {
+        const dir = pathResolve('dist', p)
+        if (!existsSync(dir)) {
+          mkdirSync(dir, { recursive: true })
         }
+
+        const src = 'dist/index.html'
+        const dst = pathJoin('dist', p + '/index.html')
+
+        copyFileSync(src, dst)
+        console.log(`${name}: Copied ${src} to ${dst}`)
       })
     },
   }

@@ -12,6 +12,8 @@ if (process.env.GH) {
 
 function cloneIndexHtmlPlugin(routes: string[] = []): PluginOption {
   const name = 'CloneIndexHtmlPlugin'
+  const outDir = 'dist' // config's `build.outDir`
+  const src = pathJoin(outDir, 'index.html')
 
   return {
     name,
@@ -25,13 +27,12 @@ function cloneIndexHtmlPlugin(routes: string[] = []): PluginOption {
       )
 
       routes.map((p) => {
-        const dir = pathResolve('dist', p)
+        const dir = pathResolve(outDir, p)
         if (!existsSync(dir)) {
           mkdirSync(dir, { recursive: true })
         }
 
-        const src = 'dist/index.html'
-        const dst = pathJoin('dist', p + '/index.html')
+        const dst = pathJoin(outDir, p, 'index.html')
 
         copyFileSync(src, dst)
         console.log(`${name}: Copied ${src} to ${dst}`)

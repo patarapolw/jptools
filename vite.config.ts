@@ -3,6 +3,7 @@ import { resolve as pathResolve, join as pathJoin } from 'path'
 
 import { defineConfig, PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import vueJSX from '@vitejs/plugin-vue-jsx'
 import { sync as glob } from 'fast-glob'
 
 let BASE_URL = '/'
@@ -54,7 +55,7 @@ function cloneIndexHtmlPlugin(routes: string[] = []): PluginOption {
 // https://vitejs.dev/config/
 export default defineConfig({
   base: BASE_URL,
-  plugins: [vue(), cloneIndexHtmlPlugin()],
+  plugins: [vue(), vueJSX(), cloneIndexHtmlPlugin()],
   resolve: {
     alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }],
   },

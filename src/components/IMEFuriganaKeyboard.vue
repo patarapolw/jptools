@@ -86,17 +86,18 @@ function addFurigana(ev: Event) {
       const regex = new RegExp(
         '^' +
           parts
-            .map(
-              (p, idx) =>
-                '(' +
-                (idx & 1
+            .map((p, idx) =>
+              [
+                '(',
+                idx & 1
                   ? '.+'
                   : Array.from(p)
                       .map((c) =>
                         isKana(c) ? `[${toKatakana(c)}${toHiragana(c)}]` : c,
                       )
-                      .join('')) +
+                      .join(''),
                 ')',
+              ].join(''),
             )
             .join('') +
           '$',

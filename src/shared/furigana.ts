@@ -10,7 +10,9 @@ export interface FuriganaMode {
   fn: MakeRubyFunc
 }
 
-const markdownIt = MarkdownIt().use(furigana())
+const markdownIt = MarkdownIt({
+  html: true,
+}).use(furigana())
 
 export const markdownModes: {
   [key: string]: FuriganaMode & {

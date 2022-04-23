@@ -41,7 +41,6 @@ onMounted(() => {
 })
 
 watch(renderMode, () => {
-  console.log(markdownModes[renderMode.value.key])
   if (markdownModes[renderMode.value.key]) {
     markdownMode.value = renderMode.value
   } else {

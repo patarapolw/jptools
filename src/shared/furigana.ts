@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it'
 import { ref, watch } from 'vue'
 import furigana from 'furigana-markdown-it'
+import DOMPurify from 'dompurify'
 
 export type MakeRubyFunc = (base: string, furi: string) => string
 
@@ -13,6 +14,10 @@ export interface FuriganaMode {
 const markdownIt = MarkdownIt({
   html: true,
 }).use(furigana())
+
+function md2html(md: string) {
+  return DOMPurify.sanitize(markdownIt.render(md))
+}
 
 export const markdownModes: {
   [key: string]: FuriganaMode & {
@@ -34,7 +39,7 @@ export const markdownModes: {
     name: 'furigana-markdown-it',
     fn: (base, ruby) => `[${base}]{${ruby}}`,
     html(s) {
-      return markdownIt.render(s)
+      return md2html(s)
     },
   },
   imeToFurigana: {
@@ -42,8 +47,8 @@ export const markdownModes: {
     name: 'IME2Furigana',
     fn: (base, ruby) => `<${base}>[${ruby}]`,
     html(s) {
-      return markdownIt.render(
-        s.replace(/<(.+?)>\[(.+?)\]/g, (_, base, ruby) => {
+      return md2html(
+        s.replace(/<([^>]+)>\[([^\]]+?)\]/g, (_, base, ruby) => {
           return htmlModes.full.fn(base, ruby)
         }),
       )

@@ -16,7 +16,13 @@ const markdownIt = MarkdownIt({
 }).use(furigana())
 
 function md2html(md: string) {
-  return DOMPurify.sanitize(markdownIt.render(md))
+  return DOMPurify.sanitize(
+    markdownIt.render(
+      md.replace(/<([^>]+)>\[([^\]]+?)\]/g, (_, base, ruby) => {
+        return htmlModes.full.fn(base, ruby)
+      }),
+    ),
+  )
 }
 
 export const markdownModes: {
@@ -29,6 +35,7 @@ export const markdownModes: {
     name: 'Anki Japanese Support',
     fn: (base, ruby) => ` ${base}[${ruby}]`,
     html(s) {
+      // Anki mode does not render Markdown, but HTML with additional syntaxes
       return s.replace(/ ([^ ]+)?\[(.+?)\]/g, (_, base, ruby) => {
         return htmlModes.full.fn(base, ruby)
       })
@@ -38,21 +45,13 @@ export const markdownModes: {
     key: '',
     name: 'furigana-markdown-it',
     fn: (base, ruby) => `[${base}]{${ruby}}`,
-    html(s) {
-      return md2html(s)
-    },
+    html: md2html,
   },
   imeToFurigana: {
     key: '',
     name: 'IME2Furigana',
     fn: (base, ruby) => `<${base}>[${ruby}]`,
-    html(s) {
-      return md2html(
-        s.replace(/<([^>]+)>\[([^\]]+?)\]/g, (_, base, ruby) => {
-          return htmlModes.full.fn(base, ruby)
-        }),
-      )
-    },
+    html: md2html,
   },
 }
 

@@ -104,3 +104,9 @@ Object.entries(htmlModes).map(([key, v]) => {
 export function furiganaSample(m: FuriganaMode) {
   return m.fn('漢字', 'ふり')
 }
+
+export function isKana(c: string) {
+  if (/[カヶ]/.test(c)) return false
+
+  return /^[\p{sc=Katakana}\p{sc=Hiragana}]+$/u.test(c)
+}

@@ -1068,9 +1068,9 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-furigana-markdown-it@patarapolw/furigana-markdown-it#v1.0.3ts:
-  version "1.0.3"
-  resolved "https://codeload.github.com/patarapolw/furigana-markdown-it/tar.gz/8f73c1a9d137e40e4c2a23c78e706b663bb4cd60"
+furigana-markdown-it@patarapolw/furigana-markdown-it#v1.0.5:
+  version "1.0.5"
+  resolved "https://codeload.github.com/patarapolw/furigana-markdown-it/tar.gz/845c8afa32b1e6958db332a35845bc4463d67c94"
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue'
 
-import { toHiragana, toKatakana, isKana } from 'wanakana'
+import { toHiragana, toKatakana } from 'wanakana'
 
 import {
   markdownMode,
@@ -9,6 +9,7 @@ import {
   markdownModes,
   furiganaSample,
   htmlModes,
+  isKana,
 } from '@/shared/furigana'
 
 import type { WritingModeProperty } from 'csstype'
@@ -61,7 +62,7 @@ function renderHTML() {
 }
 
 function onTextAreaUpdate({ data }: { data: string }) {
-  if (/^[\p{sc=Katakana}\p{sc=Hiragana}]+$/u.test(data)) {
+  if (isKana(data)) {
     furigana.value = data
   }
 }
@@ -79,7 +80,7 @@ function addFurigana(ev: Event) {
       .replace(/[ｎn]$/g, 'ん')
       .replace(/[Ｎn]$/g, 'ん')
 
-    let parts = data.split(/([\p{N}\p{sc=Han}]+)/gu)
+    let parts = data.split(/([\p{N}\p{sc=Han}カヶ]+)/gu)
 
     if (parts.length > 1) {
       const regex = new RegExp(
@@ -209,7 +210,7 @@ function addFurigana(ev: Event) {
     <input
       v-if="mini"
       type="text"
-      :ref="(el) => (elTextArea = el)"
+      :ref="(el) => (elTextArea = el as HTMLInputElement)"
       lang="ja"
       v-model="raw"
       :placeholder="placeholder"
@@ -218,7 +219,7 @@ function addFurigana(ev: Event) {
     />
     <textarea
       v-else
-      :ref="(el) => (elTextArea = el)"
+      :ref="(el) => (elTextArea = el as HTMLTextAreaElement)"
       lang="ja"
       v-model="raw"
       :placeholder="placeholder"

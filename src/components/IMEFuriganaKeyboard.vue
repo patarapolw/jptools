@@ -170,7 +170,7 @@ function addFurigana(ev: Event) {
             </span>
             <span v-else-if="k === 'furiganaMarkdownIt'">
               <a
-                href="https://github.com/iltrof/furigana-markdown-it"
+                href="https://github.com/patarapolw/furigana-markdown-it"
                 target="_blank"
                 rel="noopener noreferrer"
               >

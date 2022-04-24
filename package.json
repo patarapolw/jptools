@@ -11,8 +11,8 @@
     "gh-pages": "./gh-deploy.sh"
   },
   "dependencies": {
+    "@patarapolw/furigana-markdown-it": "^1.0.5",
     "dompurify": "^2.3.6",
-    "furigana-markdown-it": "patarapolw/furigana-markdown-it#v1.0.5",
     "markdown-it": "^12.3.2",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14",
@@ -29,6 +29,7 @@
     "@volar-plugins/prettier": "^1.1.3",
     "expect": "^27.5.1",
     "fast-glob": "^3.2.11",
+    "import-sort-parser-typescript": "^6.0.0",
     "mocha": "^9.2.2",
     "sass": "^1.50.0",
     "ts-mocha": "^9.0.2",

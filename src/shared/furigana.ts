@@ -1,7 +1,7 @@
+import furigana from '@patarapolw/furigana-markdown-it'
+import DOMPurify from 'dompurify'
 import MarkdownIt from 'markdown-it'
 import { ref, watch } from 'vue'
-import furigana from 'furigana-markdown-it'
-import DOMPurify from 'dompurify'
 
 export type MakeRubyFunc = (base: string, furi: string) => string
 

@@ -106,7 +106,7 @@ export function furiganaSample(m: FuriganaMode) {
 }
 
 export function isKana(c: string) {
-  if (/[カヶ]/.test(c)) return false
+  if (/[ヵヶ]/.test(c)) return false
 
   return /^[\p{sc=Katakana}\p{sc=Hiragana}]+$/u.test(c)
 }

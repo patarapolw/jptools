@@ -80,7 +80,7 @@ function addFurigana(ev: Event) {
       .replace(/[ｎn]$/g, 'ん')
       .replace(/[Ｎn]$/g, 'ん')
 
-    let parts = data.split(/([\p{N}\p{sc=Han}カヶ]+)/gu)
+    let parts = data.split(/([\p{N}\p{sc=Han}ヵヶ]+)/gu)
 
     if (parts.length > 1) {
       const regex = new RegExp(
@@ -118,12 +118,15 @@ function addFurigana(ev: Event) {
 
       target.setRangeText(
         parts
-          .map((p, idx) => (idx & 1 ? renderMode.value.fn(p, rt[idx]) : p))
+          .map((p, idx) =>
+            idx & 1 ? renderMode.value.fn(p, toHiragana(rt[idx])) : p,
+          )
           .join(''),
         from,
         to,
         'end',
       )
+      furigana.value = ''
     }
   }
 }

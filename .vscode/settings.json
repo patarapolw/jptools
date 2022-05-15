@@ -10,7 +10,7 @@
   },
   "[vue]": {
     "editor.semanticHighlighting.enabled": true,
-    "editor.defaultFormatter": "johnsoncodehk.volar",
+    "editor.defaultFormatter": "Vue.volar",
     "editor.formatOnSave": true
   },
   "[html]": {

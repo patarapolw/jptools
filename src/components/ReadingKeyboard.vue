@@ -109,7 +109,7 @@ function addFurigana(ev: Event) {
       </div>
     </nav>
     <textarea
-      :ref="(el) => (elTextArea = el)"
+      :ref="(el) => (elTextArea = el as HTMLTextAreaElement)"
       lang="ja"
       placeholder="Any Japanese typed with an IME here will output its Furigana..."
       @compositionupdate="onTextAreaUpdate"

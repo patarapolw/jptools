@@ -1,6 +1,7 @@
 import furigana from '@patarapolw/furigana-markdown-it'
 import DOMPurify from 'dompurify'
 import MarkdownIt from 'markdown-it'
+import MarkdownItEmoji from 'markdown-it-emoji'
 import { ref, watch } from 'vue'
 
 export type MakeRubyFunc = (base: string, furi: string) => string
@@ -13,14 +14,20 @@ export interface FuriganaMode {
 
 const markdownIt = MarkdownIt({
   html: true,
-}).use(furigana())
+})
+  .use(furigana())
+  .use(MarkdownItEmoji)
 
-function md2html(md: string) {
+export function md2html(md: string) {
   return DOMPurify.sanitize(
     markdownIt.render(
-      md.replace(/<([^>]+)>\[([^\]]+?)\]/g, (_, base, ruby) => {
-        return htmlModes.full.fn(base, ruby)
-      }),
+      md
+        .replace(/<([^>]+)>\[([^\]]+?)\]/g, (_, base, ruby) => {
+          return htmlModes.full.fn(base, ruby)
+        })
+        .replace(/<([^>]+)>\{([^\}]+?)\}/g, (_, base, ruby) => {
+          return htmlModes.full.fn(base, `<span class="spoiler">${ruby}</span>`)
+        }),
     ),
   )
 }

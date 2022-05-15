@@ -11,7 +11,7 @@ body > #app {
 
 $base-font-size: 18px;
 
-span, a, textarea {
+span:not(.spoiler), a, textarea {
   font-size: $base-font-size;
 }
 
@@ -24,4 +24,12 @@ textarea, input[type="text"] {
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.spoiler {
+  filter: blur(5px);
+
+  &:hover {
+    filter: none;
+  }
 }

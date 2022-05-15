@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { nextTick } from 'process'
 import { onMounted, ref } from 'vue'
 
 import { toKana } from 'wanakana'
@@ -22,10 +23,16 @@ function makeKanaFromInput(ev: Event) {
   const { inputType } = ev
 
   if (target instanceof HTMLTextAreaElement) {
-    currentText.value = toKana(target.value, {
+    const kana = toKana(target.value, {
       IMEMode: inputType !== 'insertFromPaste',
       useObsoleteKana: true,
     })
+    if (currentText.value !== kana) {
+      currentText.value = kana
+      nextTick(() => {
+        target.setSelectionRange(currentText.value.length, null, 'forward')
+      })
+    }
   }
 }
 </script>
@@ -33,7 +40,7 @@ function makeKanaFromInput(ev: Event) {
 <template>
   <div :style="{ display: 'flex', 'flex-direction': 'column' }">
     <textarea
-      :ref="(el) => (elTextArea = el)"
+      :ref="(el) => (elTextArea = el as HTMLTextAreaElement)"
       lang="ja"
       placeholder="English alphabets will conveniently converted to Kana. (Hiragana for lowercase, Katakana for uppercase.)"
       :value="currentText"

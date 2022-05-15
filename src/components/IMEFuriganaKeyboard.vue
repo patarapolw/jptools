@@ -61,9 +61,11 @@ function renderHTML() {
   html.value = md ? md.html(raw.value) : raw.value
 }
 
-function onTextAreaUpdate({ data }: { data: string }) {
+function onIMEUsage({ data }: { data: string }) {
   if (isKana(data)) {
     furigana.value = data
+  } else if (!/[A-ZA-ZＡ-Ｚ]/iu.test(data)) {
+    furigana.value = ''
   }
 }
 
@@ -217,7 +219,7 @@ function addFurigana(ev: Event) {
       lang="ja"
       v-model="raw"
       :placeholder="placeholder"
-      @compositionupdate="onTextAreaUpdate"
+      @compositionupdate="onIMEUsage"
       @compositionend="addFurigana"
     />
     <textarea
@@ -226,7 +228,7 @@ function addFurigana(ev: Event) {
       lang="ja"
       v-model="raw"
       :placeholder="placeholder"
-      @compositionupdate="onTextAreaUpdate"
+      @compositionupdate="onIMEUsage"
       @compositionend="addFurigana"
     />
 

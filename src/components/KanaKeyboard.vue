@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { nextTick } from 'process'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 
 import { toKana } from 'wanakana'
 

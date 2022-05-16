@@ -146,7 +146,7 @@ function matchFurigana(body: string, toptext: string) {
 
 function renderHTML() {
   html.value = raw.value.replace(
-    /\[([^\[\]]+?)\]\{([\{\}]+?)\}/g,
+    /\[([^\[\]]+?)\]\{([^\{\}]+?)\}/g,
     (...m: string[]) => {
       return matchFurigana(m[1], m[2])
     },

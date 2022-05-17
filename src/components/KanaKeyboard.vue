@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { toKana } from 'wanakana'
 
@@ -7,7 +7,6 @@ const props = defineProps<{
   mini?: boolean
 }>()
 
-const currentText = ref('')
 const elTextArea = ref<HTMLTextAreaElement>()
 
 onMounted(() => {
@@ -19,18 +18,27 @@ onMounted(() => {
 function makeKanaFromInput(ev: Event) {
   const { target } = ev
   // @ts-ignore
-  const { inputType } = ev
+  const { inputType } = ev as {
+    inputType: 'insertFromPaste' | 'insertText' | 'deleteContentBackward'
+  }
 
   if (target instanceof HTMLTextAreaElement) {
+    if (!inputType.startsWith('insert')) return
+
     const kana = toKana(target.value, {
       IMEMode: inputType !== 'insertFromPaste',
       useObsoleteKana: true,
     })
-    if (currentText.value !== kana) {
-      currentText.value = kana
-      nextTick(() => {
-        target.setSelectionRange(currentText.value.length, null, 'forward')
-      })
+    if (target.value.replace(/[a-z]+/gi, '') !== kana.replace(/[a-z]+/gi, '')) {
+      let { selectionEnd } = target
+      if (selectionEnd < target.value.length) {
+        selectionEnd = kana.length - (target.value.length - selectionEnd)
+      } else {
+        selectionEnd = kana.length
+      }
+
+      target.value = kana
+      target.setSelectionRange(selectionEnd, selectionEnd)
     }
   }
 }
@@ -42,7 +50,6 @@ function makeKanaFromInput(ev: Event) {
       :ref="(el) => (elTextArea = el as HTMLTextAreaElement)"
       lang="ja"
       placeholder="English alphabets will conveniently converted to Kana. (Hiragana for lowercase, Katakana for uppercase.)"
-      :value="currentText"
       @input="makeKanaFromInput"
       :style="{ height: mini ? '200px' : '300px' }"
     />

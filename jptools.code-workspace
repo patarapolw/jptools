@@ -4,7 +4,7 @@
       "path": "."
     },
     {
-      "path": "packages/markdown-furigana"
+      "path": "packages/kanji-concluder"
     },
     {
       "path": "packages/tag-matcher"
@@ -17,10 +17,12 @@
     "files.associations": {
       ".husky/*": "shell"
     },
-    "sort-imports.on-save": true,
+    "sort-imports.on-save": false,
     "editor.tabSize": 2,
     "vetur.validation.template": false,
     "vetur.validation.script": false,
     "vetur.validation.style": false,
+    "importSorter.generalConfiguration.sortOnBeforeSave": true,
+    "importSorter.importStringConfiguration.hasSemicolon": true
   }
 }

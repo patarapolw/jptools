@@ -21,11 +21,5 @@
   ],
   "devDependencies": {
     "typescript": "^4.6.3"
-  },
-  "importSort": {
-    ".js, .ts, .vue": {
-      "parser": "typescript",
-      "style": "module"
-    }
   }
 }

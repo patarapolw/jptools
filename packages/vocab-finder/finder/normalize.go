@@ -18,6 +18,9 @@ func Normalize(s string) map[string]VContent {
 
 	for _, token := range tokens {
 		_, exists := token.BaseForm()
+		if !exists {
+			continue
+		}
 
 		d := tokenizer.NewTokenData(token)
 
@@ -27,17 +30,13 @@ func Normalize(s string) map[string]VContent {
 
 		if func() bool {
 			for _, v := range token.POS() {
-				if v == "記号" || v == "助詞" {
+				if v == "記号" || v == "助詞" || v == "助動詞" {
 					return true
 				}
 			}
 			return false
 		}() {
 			continue
-		}
-
-		if exists {
-			d.Surface = ""
 		}
 
 		d.Start = 0

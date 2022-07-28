@@ -1,6 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -36,4 +40,29 @@ func ListVocab(s string) string {
 	}
 
 	return strings.Join(out, "\n")
+}
+
+func ListVocabFile() {
+	filename := os.Args[1]
+	output := ""
+
+	if len(os.Args) > 2 {
+		output = os.Args[2]
+	}
+
+	b, e := ioutil.ReadFile(filename)
+	if e != nil {
+		log.Fatalln(e)
+	}
+
+	out := ListVocab(string(b))
+
+	if output != "" {
+		e := ioutil.WriteFile(output, []byte(out), 0x644)
+		if e != nil {
+			log.Fatalln(e)
+		}
+	} else {
+		fmt.Println(out)
+	}
 }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import IMEFuriganaKeyboard from '@/components/IMEFuriganaKeyboard.vue'
-import KanaKeyboard from '@/components/KanaKeyboard.vue'
-import H from '@/components/H.vue'
-import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
+import IMEFuriganaKeyboard from '@/components/IMEFuriganaKeyboard.vue';
+import KanaKeyboard from '@/components/KanaKeyboard.vue';
+import H from '@/components/H.vue';
+import ReadingKeyboard from '@/components/ReadingKeyboard.vue';
 </script>
 
 <template>
@@ -45,6 +45,23 @@ import ReadingKeyboard from '@/components/ReadingKeyboard.vue'
             <span> {{ ' (use this to generate Markdown or HTML)' }} </span>
           </div>
           <IMEFuriganaKeyboard mini />
+        </div>
+      </li>
+      <li>
+        <div>
+          <div>
+            <router-link to="/preprocess"> Pre-process keyboard </router-link>
+            <span>
+              {{ ' (use this to normalize additional Markdown syntaxes)' }}
+            </span>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div>
+            <router-link to="/vocab"> Vocabulary extractor </router-link>
+          </div>
         </div>
       </li>
     </ul>

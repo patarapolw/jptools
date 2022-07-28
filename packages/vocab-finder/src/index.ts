@@ -27,7 +27,7 @@ async function dumpFolder(folderName: string) {
 
 async function main() {
   const client = await initDB();
-  await dumpFolder('M:\\Downloads\\...\\');
+  await dumpFolder('M:\\Downloads\\DEATH.NOTE.-デスノート-(netflix)');
   await client.close();
 }
 

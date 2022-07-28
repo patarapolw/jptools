@@ -21,6 +21,7 @@ export async function initDB() {
   const idxSpec: Partial<Record<keyof DbTokenType, 1>> = {
     filename: 1,
     word_id: 1,
+    word_position: 1,
   };
   if (!(await dbToken.indexExists(idxName))) {
     await dbToken.createIndex(idxSpec, { name: idxName, unique: true });

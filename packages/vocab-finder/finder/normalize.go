@@ -2,7 +2,6 @@ package finder
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/ikawaha/kagome/v2/tokenizer"
 )
@@ -16,7 +15,6 @@ func Normalize(s string) map[string]VContent {
 	out := map[string]VContent{}
 
 	tokens := Tokenizer.Tokenize(s)
-	fmt.Println(len(tokens))
 
 	for _, token := range tokens {
 		_, exists := token.BaseForm()

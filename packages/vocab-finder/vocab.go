@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
+	"path"
 	"sort"
 	"strconv"
 	"strings"
@@ -42,23 +42,52 @@ func ListVocab(s string) string {
 	return strings.Join(out, "\n")
 }
 
-func ListVocabFile() {
-	filename := os.Args[1]
-	output := ""
-
-	if len(os.Args) > 2 {
-		output = os.Args[2]
-	}
-
-	b, e := ioutil.ReadFile(filename)
+func ListVocabFile(infile string, outfile string) {
+	b, e := ioutil.ReadFile(infile)
 	if e != nil {
 		log.Fatalln(e)
 	}
 
 	out := ListVocab(string(b))
 
-	if output != "" {
-		e := ioutil.WriteFile(output, []byte(out), 0x644)
+	if outfile != "" {
+		e := ioutil.WriteFile(outfile, []byte(out), 0x644)
+		if e != nil {
+			log.Fatalln(e)
+		}
+	} else {
+		fmt.Println(out)
+	}
+}
+
+func ListVocabDir(infolder string, outfile string) {
+	s := ""
+	files, e := ioutil.ReadDir(infolder)
+	if e != nil {
+		log.Fatalln(e)
+	}
+
+	for _, f := range files {
+		filename := f.Name()
+		if f.IsDir() {
+			continue
+		}
+
+		if !strings.HasSuffix(filename, ".srt") {
+			continue
+		}
+
+		b, e := ioutil.ReadFile(path.Join(infolder, filename))
+		if e != nil {
+			log.Fatalln(e)
+		}
+		s += string(b) + "\n"
+	}
+
+	out := ListVocab(s)
+
+	if outfile != "" {
+		e := ioutil.WriteFile(outfile, []byte(out), 0x644)
 		if e != nil {
 			log.Fatalln(e)
 		}

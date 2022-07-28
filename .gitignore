@@ -24,3 +24,6 @@ dist-ssr
 /tmp/
 log.*
 *.log
+
+.env
+.env.*

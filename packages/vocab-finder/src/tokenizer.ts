@@ -12,3 +12,15 @@ export async function makeTokenizer(dicPath = 'dict') {
   });
   return tokenizer;
 }
+
+export function tokenDictID(t: kuromoji.IpadicFeatures) {
+  return [
+    t.basic_form,
+    t.reading || '',
+    t.pronunciation || '',
+    t.pos,
+    t.pos_detail_1,
+    t.pos_detail_2,
+    t.pos_detail_3,
+  ].join('\t');
+}

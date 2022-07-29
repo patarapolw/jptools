@@ -1,0 +1,3 @@
+[submodule "submodules/jpts"]
+	path = submodules/jpts
+	url = git@github.com:patarapolw/jpts.git

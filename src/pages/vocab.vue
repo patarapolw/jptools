@@ -1,19 +1,30 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import type { IpadicFeatures } from 'kuromoji';
 import { toHiragana } from 'wanakana';
 import H from '@/components/H.vue';
 
+let excludedList = new Set<string>();
+
+onMounted(() => {
+  const exluded = import.meta.glob('../../assets/excluded/vocab/*.txt', {
+    as: 'raw',
+  }) as unknown as Record<string, string>;
+
+  excludedList = new Set(
+    Object.values(exluded).flatMap((v) =>
+      v.split('\n').map((r) => {
+        const cols = r.split('\t');
+        return [cols[0], cols[2]].join('\t');
+      }),
+    ),
+  );
+
+  console.log(excludedList);
+});
+
 function tokenDictID(t: IpadicFeatures) {
-  return [
-    t.basic_form,
-    t.reading || '',
-    t.pronunciation || '',
-    t.pos,
-    t.pos_detail_1,
-    t.pos_detail_2,
-    t.pos_detail_3,
-  ].join('\t');
+  return [t.basic_form, makePOS(t)].join('\t');
 }
 
 type TokenCount = {
@@ -119,6 +130,10 @@ async function makeCount(
       }
 
       const id = tokenDictID(t);
+      if (excludedList.has(id)) {
+        continue;
+      }
+
       const v = map.get(id);
 
       if (v) {

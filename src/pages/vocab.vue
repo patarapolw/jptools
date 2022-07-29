@@ -1,26 +1,10 @@
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue';
-import * as k from 'kuromoji';
+import { ref, watch } from 'vue';
+import type { IpadicFeatures } from 'kuromoji';
 import { toHiragana } from 'wanakana';
 import H from '@/components/H.vue';
 
-let tokenizer: k.Tokenizer<k.IpadicFeatures>;
-
-async function makeTokenizer(dicPath = 'https://unpkg.com/kuromoji/dict') {
-  // @ts-ignore
-  const kuromoji: typeof k = await import('kuromoji/build/kuromoji.js');
-
-  tokenizer = await new Promise((resolve, reject) => {
-    kuromoji
-      .builder({
-        dicPath, // Default path value
-      })
-      .build((e, t) => (e ? reject(e) : resolve(t)));
-  });
-  return tokenizer;
-}
-
-function tokenDictID(t: k.IpadicFeatures) {
+function tokenDictID(t: IpadicFeatures) {
   return [
     t.basic_form,
     t.reading || '',
@@ -33,7 +17,7 @@ function tokenDictID(t: k.IpadicFeatures) {
 }
 
 type TokenCount = {
-  token: k.IpadicFeatures;
+  token: IpadicFeatures;
   count: number;
 };
 
@@ -65,7 +49,7 @@ async function onUpload(evt: Event) {
   }
 }
 
-function makePOS(t: k.IpadicFeatures) {
+function makePOS(t: IpadicFeatures) {
   return [t.pos, t.pos_detail_1, t.pos_detail_2, t.pos_detail_3]
     .filter((s) => s !== '*')
     .join('・');
@@ -77,25 +61,37 @@ async function makeCount(
     action: () => Promise<string>;
   }[],
 ) {
-  if (!tokenizer) {
-    loader.value = `Loading segmentation engine...`;
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-
   output.value = [];
 
   const map = new Map<
     string,
     {
-      token: k.IpadicFeatures;
+      token: IpadicFeatures;
       count: number;
     }
   >();
 
   for (const f of fns) {
     loader.value = f.loader;
+    const tokens: IpadicFeatures[] = await fetch(
+      'https://empty-dew-3935.herokuapp.com/api/tokenizer/kuromoji',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify({
+          text: await f.action(),
+        }),
+      },
+    )
+      .then((r) => (r.ok ? r.json() : { tokens: null }))
+      .then((r) => r.tokens);
+    if (!tokens) {
+      continue;
+    }
 
-    for (const t of tokenizer.tokenize(await f.action())) {
+    for (const t of tokens) {
       if (!reJa.test(t.basic_form)) {
         continue;
       }
@@ -122,10 +118,6 @@ async function makeCount(
 
   loader.value = '';
 }
-
-onMounted(() => {
-  makeTokenizer();
-});
 
 watch(raw, () => {
   if (raw.value.trim() && reJa.test(raw.value)) {

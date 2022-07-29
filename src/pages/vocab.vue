@@ -19,8 +19,6 @@ onMounted(() => {
       }),
     ),
   );
-
-  console.log(excludedList);
 });
 
 function tokenDictID(t: IpadicFeatures) {

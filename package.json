@@ -7,8 +7,7 @@
     "dev": "vite",
     "lint": "vue-tsc --noEmit",
     "build": "vite build",
-    "preview": "vite preview",
-    "gh-pages": "./gh-deploy.sh"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@patarapolw/furigana-markdown-it": "^1.0.5",

@@ -7,4 +7,15 @@ declare module '*.vue' {
   export default component;
 }
 
-declare const __KUROMOJI_API__: string;
+interface ImportMetaEnv {
+  readonly VITE_NODE_API: string;
+  readonly VITE_KUROMOJI_API: string;
+
+  readonly VITE_PYTHON_API?: string;
+  readonly VITE_GO_API?: string;
+  readonly VITE_JVM_API?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

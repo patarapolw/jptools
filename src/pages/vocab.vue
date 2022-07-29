@@ -73,15 +73,18 @@ async function makeCount(
 
   for (const f of fns) {
     loader.value = f.loader;
-    const tokens: IpadicFeatures[] = await fetch(__KUROMOJI_API__, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+    const tokens: IpadicFeatures[] = await fetch(
+      import.meta.env.VITE_KUROMOJI_API,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify({
+          text: await f.action(),
+        }),
       },
-      body: JSON.stringify({
-        text: await f.action(),
-      }),
-    })
+    )
       .then((r) => (r.ok ? r.json() : { tokens: null }))
       .then((r) => r.tokens);
     if (!tokens) {

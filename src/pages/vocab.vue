@@ -12,12 +12,20 @@ onMounted(() => {
   }) as unknown as Record<string, string>;
 
   excludedList = new Set(
-    Object.values(exluded).flatMap((v) =>
-      v.split('\n').map((r) => {
-        const cols = r.split('\t');
+    Object.values(exluded).flatMap((v) => {
+      if (/^#\r?\n/.test(v)) {
+        return '';
+      }
+
+      return v.split('\n').map((r) => {
+        if (r[0] === '#') {
+          return '';
+        }
+
+        const cols = r.trimEnd().split('\t');
         return [cols[0], cols[2]].join('\t');
-      }),
-    ),
+      });
+    }),
   );
 });
 

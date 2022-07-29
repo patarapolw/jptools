@@ -1,7 +1,7 @@
 import { sync as glob } from 'fast-glob';
 import { copyFileSync, existsSync, mkdirSync } from 'fs';
 import { join as pathJoin, resolve as pathResolve } from 'path';
-import { defineConfig, PluginOption } from 'vite';
+import { defineConfig, loadEnv, PluginOption } from 'vite';
 
 import vue from '@vitejs/plugin-vue';
 import vueJSX from '@vitejs/plugin-vue-jsx';
@@ -52,22 +52,25 @@ function cloneIndexHtmlPlugin(routes: string[] = []): PluginOption {
   };
 }
 
-const defaultEnv: Record<string, string> = {
-  NODE_API: process.env['NODE_API'] || 'http://localhost:7000/api',
-};
-
-defaultEnv['KUROMOJI_API'] = defaultEnv['NODE_API'] + '/tokenizer/kuromoji';
-
-Object.entries(defaultEnv).map(([k, v]) => {
-  const k1 = `VITE_${k}`;
-  process.env[k1] = process.env[k1] || v;
-});
-
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: BASE_URL,
-  plugins: [vue(), vueJSX(), cloneIndexHtmlPlugin()],
-  resolve: {
-    alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }],
-  },
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd());
+  const defaultEnv: Record<string, string> = {
+    NODE_API: process.env['NODE_API'] || 'http://localhost:7000/api',
+  };
+
+  defaultEnv['KUROMOJI_API'] = defaultEnv['NODE_API'] + '/tokenizer/kuromoji';
+
+  Object.entries(defaultEnv).map(([k, v]) => {
+    const k1 = `VITE_${k}`;
+    process.env[k1] = env[k1] || v;
+  });
+
+  return {
+    base: BASE_URL,
+    plugins: [vue(), vueJSX(), cloneIndexHtmlPlugin()],
+    resolve: {
+      alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }],
+    },
+  };
 });

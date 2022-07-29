@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import type { IpadicFeatures } from 'kuromoji';
 import { toHiragana } from 'wanakana';
 import H from '@/components/H.vue';
@@ -24,7 +24,6 @@ type TokenCount = {
 const reJa = /[\p{sc=Han}\p{sc=Katakana}\p{sc=Hiragana}]/u;
 const nonPOS = new Set(['助詞', '助動詞']);
 
-const raw = ref('');
 const loader = ref('');
 const output = ref<TokenCount[]>([]);
 
@@ -44,8 +43,27 @@ async function onUpload(evt: Event) {
       });
     }
 
-    raw.value = '';
     await makeCount(fns);
+  }
+}
+
+function onPaste(evt: ClipboardEvent) {
+  const { target } = evt;
+  if (
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLInputElement
+  ) {
+    setTimeout(() => {
+      const { value } = target;
+      if (value.trim() && reJa.test(value)) {
+        makeCount([
+          {
+            loader: 'Loading...',
+            action: async () => value,
+          },
+        ]);
+      }
+    }, 10);
   }
 }
 
@@ -118,17 +136,6 @@ async function makeCount(
 
   loader.value = '';
 }
-
-watch(raw, () => {
-  if (raw.value.trim() && reJa.test(raw.value)) {
-    makeCount([
-      {
-        loader: 'Loading...',
-        action: async () => raw.value,
-      },
-    ]);
-  }
-});
 </script>
 
 
@@ -148,8 +155,8 @@ watch(raw, () => {
 
     <textarea
       lang="ja"
-      v-model="raw"
-      placeholder="Or text written here will be converted to a list of vocabularies."
+      placeholder="Or paste (Ctrl+V) some text here to convert to a list of vocabularies."
+      @paste="onPaste"
     />
 
     <table lang="ja">

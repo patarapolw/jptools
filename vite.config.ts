@@ -4,7 +4,6 @@ import { join as pathJoin, resolve as pathResolve } from 'path';
 import { defineConfig, loadEnv, PluginOption } from 'vite';
 
 import vue from '@vitejs/plugin-vue';
-import vueJSX from '@vitejs/plugin-vue-jsx';
 
 let BASE_URL = '/';
 if (process.env.GH) {
@@ -68,7 +67,7 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     base: BASE_URL,
-    plugins: [vue(), vueJSX(), cloneIndexHtmlPlugin()],
+    plugins: [vue(), cloneIndexHtmlPlugin()],
     resolve: {
       alias: [{ find: /^@\/(.+)$/, replacement: pathResolve('src', '$1') }],
     },

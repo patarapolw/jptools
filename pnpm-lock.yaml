@@ -17,6 +17,9 @@ dependencies:
   markdown-it-emoji:
     specifier: ^2.0.2
     version: 2.0.2
+  mecab-web-worker:
+    specifier: ^0.2.2
+    version: 0.2.2
   vue:
     specifier: ^3.2.25
     version: 3.2.25
@@ -1138,6 +1141,10 @@ packages:
 
   /mdurl@1.0.1:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
+    dev: false
+
+  /mecab-web-worker@0.2.2:
+    resolution: {integrity: sha512-dz0FFAiycqbemcPg+At1QqWqr/kwWN8v6GDCn3HU3iAouDrSU+qNeSyG7M4Snzeqy3owreOm3H1FE5yEoxO3Cw==}
     dev: false
 
   /merge2@1.4.1:

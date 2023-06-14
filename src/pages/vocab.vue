@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import type { IpadicFeatures } from 'kuromoji';
+import { MecabWorker, UNIDIC3, UnidicFeature29 } from 'mecab-web-worker';
 import { toHiragana } from 'wanakana';
 import H from '@/components/H.vue';
 
 let excludedList = new Set<string>();
+let worker = ref<MecabWorker<UnidicFeature29>>()
 
 onMounted(() => {
   const exluded = import.meta.glob('../../assets/excluded/vocab/*.txt', {
-    as: 'raw',
-  }) as unknown as Record<string, string>;
+    as: 'raw', eager: true
+  });
 
   excludedList = new Set(
     Object.values(exluded).flatMap((v) => {
@@ -27,14 +28,19 @@ onMounted(() => {
       });
     }),
   );
+
+  MecabWorker.create(UNIDIC3).then((w) => {
+    console.log(w)
+    worker.value = w
+  });
 });
 
-function tokenDictID(t: IpadicFeatures) {
+function tokenDictID(t: UnidicFeature29) {
   return [t.basic_form, makePOS(t)].join('\t');
 }
 
 type TokenCount = {
-  token: IpadicFeatures;
+  token: UnidicFeature29;
   count: number;
 };
 
@@ -84,7 +90,7 @@ function onPaste(evt: ClipboardEvent) {
   }
 }
 
-function makePOS(t: IpadicFeatures) {
+function makePOS(t: UnidicFeature29) {
   return [t.pos, t.pos_detail_1, t.pos_detail_2, t.pos_detail_3]
     .filter((s) => s !== '*')
     .join('・');
@@ -101,30 +107,18 @@ async function makeCount(
   const map = new Map<
     string,
     {
-      token: IpadicFeatures;
+      token: UnidicFeature29;
       count: number;
     }
   >();
 
+  while (!worker.value) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
   for (const f of fns) {
     loader.value = f.loader;
-    const tokens: IpadicFeatures[] = await fetch(
-      import.meta.env.VITE_KUROMOJI_API,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify({
-          text: await f.action(),
-        }),
-      },
-    )
-      .then((r) => (r.ok ? r.json() : { tokens: null }))
-      .then((r) => r.tokens);
-    if (!tokens) {
-      continue;
-    }
+    const tokens: UnidicFeature29[] = (await worker.value.parseToNodes(await f.action())).map((n) => n.feature)
 
     for (const t of tokens) {
       if (!reJa.test(t.basic_form)) {
@@ -164,21 +158,12 @@ async function makeCount(
   <H :level="1"> Vocabulary extractor </H>
 
   <div class="VocabPage">
-    <input
-      type="file"
-      name="file"
-      placeholder="Upload a file"
-      accept="*.txt,.srt,.ass,.md,.json,.yaml,.yml"
-      multiple
-      @change="onUpload"
-    />
+    <input type="file" name="file" placeholder="Upload a file" accept="*.txt,.srt,.ass,.md,.json,.yaml,.yml" multiple
+      @change="onUpload" />
     <small v-if="loader" v-text="loader"> </small>
 
-    <textarea
-      lang="ja"
-      placeholder="Or paste (Ctrl+V) some text here to convert to a list of vocabularies."
-      @paste="onPaste"
-    />
+    <textarea lang="ja" placeholder="Or paste (Ctrl+V) some text here to convert to a list of vocabularies."
+      @paste="onPaste" />
 
     <table lang="ja">
       <colgroup>
@@ -219,7 +204,7 @@ async function makeCount(
   display: flex;
   flex-direction: column;
 
-  > * + * {
+  >*+* {
     margin-top: 1em;
   }
 
